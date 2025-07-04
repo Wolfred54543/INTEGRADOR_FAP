@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrar Comunicados - Deportes FAP</title>
+    <head th:replace="~{componentes/administrador/head :: head}"></head>
+    <link rel="stylesheet" th:href="@{/css/administrador/comunicados.css}">
+</head>
+<body>
+
+<header th:replace="~{componentes/administrador/header :: header}"></header>
+
+<div class="page-header">
+    <h1 class="page-title">Administrar Comunicados</h1>
+    <p class="page-subtitle">Crear, editar y gestionar comunicados oficiales</p>
+</div>
+
+<main class="container">
+
+    <!-- FORMULARIO DE CREACIÓN -->
+    <div class="form-section">
+        <h2 class="section-title">Gestion de Comunicados</h2>
+
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+        <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+       <form th:action="@{/comunicados/guardar}" th:object="${comunicado}" method="post" enctype="multipart/form-data">
+    <input type="hidden" th:field="*{comId}" />
+
+    <div class="form-group">
+        <label>Tipo de Comunicado</label>
+        <select class="form-select" th:field="*{comTipo}" required>
+            <option value="">Seleccionar tipo</option>
+            <option value="oficial">Oficial</option>
+            <option value="informativo">Informativo</option>
+            <option value="urgente">Urgente</option>
+            <option value="convocatoria">Convocatoria</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Título del Comunicado</label>
+        <input type="text" class="form-input" th:field="*{comTitulo}" required>
+    </div>
+
+    <div class="form-group">
+        <label>Fecha de Publicación</label>
+        <input type="date" class="form-input" th:field="*{comFechaPublicacion}" required>
+    </div>
+
+    <div class="form-group">
+        <label>Contenido</label>
+        <textarea class="form-textarea" th:field="*{comContenido}" required></textarea>
+    </div>
+
+    <div class="form-group">
+        <label>Adjuntar Documento</label>
+        <input type="file" name="archivo" accept=".pdf,.doc,.docx" />
+        <p th:if="*{comDocumento}" th:text="'Archivo actual: ' + *{comDocumento}"></p>
+    </div>
+
+    <div class="form-group">
+        <label>Estado</label>
+        <select class="form-select" th:field="*{comEstado}" required>
+            <option value="borrador">Borrador</option>
+            <option value="publicado">Publicado</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn-primary" th:text="*{comId} != null ? 'Actualizar Comunicado' : 'Crear Comunicado'"></button><br><br>
+    <a style="text-decoration: none; color: rgb(102, 101, 101);" href="/comunicados">Volver</a>
+</form>
+    </div>
+
+    <!-- LISTA DE COMUNICADOS EXISTENTES -->
+    <div class="comunicados-list">
+        <h2 class="section-title">Comunicados Existentes</h2>
+
+        <div class="comunicado-item" th:each="comunicado : ${comunicados}">
+            <div class="comunicado-header">
+                <div class="comunicado-info">
+                    <div class="comunicado-title" th:text="${comunicado.comTitulo}">Título</div>
+                    <div class="comunicado-meta">
+                        <span th:classappend="${comunicado.comEstado == 'publicado'} ? 'status-badge status-published' : 'status-badge status-draft'"
+                              th:text="${comunicado.comEstado}">Estado</span>
+                        📅 <span th:text="${#temporals.format(comunicado.comFechaPublicacion, 'dd MMM yyyy')}"></span> |
+                        Tipo: <span th:text="${comunicado.comTipo}"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="comunicado-preview" th:text="${comunicado.comContenido}">Contenido</div>
+
+            <div class="comunicado-actions">
+                <a style="text-decoration: none;" class="btn-secondary" th:href="@{/comunicados/editar/{id}(id=${comunicado.comId})}">✏️ Editar</a>
+
+                <form th:action="@{/comunicados/eliminar/{id}(id=${comunicado.comId})}" method="post" style="display:inline" onsubmit="return confirm('¿Deseas eliminar este comunicado?');">
+                    <button class="btn-danger" type="submit">🗑️ Eliminar</button>
+                </form>
+
+                <form th:if="${comunicado.comEstado == 'borrador'}"
+                    th:action="@{/comunicados/publicar/{id}(id=${comunicado.comId})}" method="post" style="display:inline">
+                    <button class="btn-secondary" type="submit">📢 Publicar</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</main>
+
+</body>
+</html>

@@ -1,0 +1,27 @@
+<header>
+    <style>
+        .login-btn {
+            background: #d3d3d3b2;
+            color: rgb(255, 255, 255);
+            padding: 7px 20px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+    </style>
+    <div class="logo">
+        <!-- Logo de Deportes FAP -->
+            <img th:src="@{/imagenes/invitado/noticias/logo.png}" alt="logo">
+        <h1>Deportes FAP</h1>
+    </div>
+    <!-- Menú de navegación principal -->
+    <nav>
+        <ul>
+            <li><a href="/miembroMesa">Registrar Resultados</a></li>
+            <li><a href="/registrarGoleadores">Registrar Goleadores</a></li>
+        </ul>
+    </nav>
+        <a href="/login" style="text-decoration: none;"><button class="login-btn">Cerrar Sesión</button></a>
+</header>

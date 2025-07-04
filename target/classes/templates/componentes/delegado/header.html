@@ -1,0 +1,30 @@
+<!-- ENCABEZADO: Contiene el logo, título y navegación -->
+<header>
+    <style>
+        .login-btn {
+            background: #d3d3d3b2;
+            color: rgb(255, 255, 255);
+            padding: 7px 20px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+    </style>
+    <div class="logo">
+        <!-- Logo de la Fuerza Aérea del Perú -->
+        <img th:src="@{/imagenes/invitado/noticias/logo.png}" alt="logo">
+        <h1 class="header-title">Deportes FAP</h1>
+    </div>
+    <!-- Menú de navegación principal -->
+    <nav>
+        <ul>
+            <li><a href="/reclamoFormulario">Reclamo</a></li>
+            <li><a href="/reclamoHistorial">Historial de reclamo</a></li>
+            <li><a href="#">Plantilla de Equipo</a></li>
+        </ul>
+    </nav>
+    <a href="/login" style="text-decoration: none;"><button class="login-btn">Cerrar Sesión</button></a>
+</header>
+  

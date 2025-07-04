@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <head th:replace="~{componentes/invitado/head :: head}"></head>
+  <link rel="stylesheet" th:href="@{/css/invitado/styleContactanos.css}">
+  <link rel="stylesheet" th:href="@{/css/invitado/styleNoticias.css}">
+  <link rel="stylesheet" th:href="@{/css/invitado/styleHeader.css}">
+  <link rel="stylesheet" th:href="@{/css/invitado/stylePartidos.css}">
+  <!-- Enlace a la hoja de estilos CSS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Cuerpo del documento HTML -->
+<header th:replace="~{componentes/invitado/header :: header}"></header>
+  <!-- Cabecera del sitio -->
+
+  <div class="container">
+    <div class="register-container">
+      <div class="register-box">
+        <h1>Ponte en Contacto</h1>
+        <p>Ayudanos a mejorar tú experiencia en nuestra pagina</p>
+        <form action="#" th:action="@{/contactanos}" method="post" th:object="${contactanos}">
+          <label for="nombre">Nombres</label>
+          <input type="text" th:field="*{conNombre}" id="nombre" placeholder="Ingresa tu nombre" required />
+
+          <label for="apellido">Apellidos</label>
+          <input type="text" th:field="*{conApellido}" id="apellido" placeholder="Ingresa tu apellido" required />
+
+          <label for="email">Email</label>
+          <input type="email" th:field="*{conEmail}" id="email" placeholder="Correo electrónico" required />
+
+          <label for="telefono">Numero de Telefono</label>
+          <input type="text" th:field="*{conTelefono}" id="telefono" placeholder="Telefono" required />
+
+          <label for="mensaje">Mensaje</label>
+          <textarea type="text" th:field="*{conMensaje}" id="mensaje" style="width: 400px; height: 150px; resize: none; margin: 10px 0; padding: 5px;" required>
+
+          </textarea>
+
+          <button type="submit" class="btn-principal">Enviar Mensaje</button>
+        </form>
+      </div>
+    </div>
+    <div class="imagen-container">
+      <img th:src="@{/imagenes/invitado/contactanos/img_contactanos.jpg}" alt="contactanos" class="imagen-registro">
+    </div>
+  </div>
+
+  <!-- PIE DE PÁGINA: Dividido en tres secciones -->
+  <footer th:replace="~{componentes/miembroMesa/footer :: footer}"></footer>
+</body>
+</html>

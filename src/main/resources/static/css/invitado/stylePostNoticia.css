@@ -1,0 +1,151 @@
+/* 
+ * Hoja de estilos para la página de artículo/post
+ * Contiene los estilos para la estructura completa de la página
+ */
+
+/* Reset básico para eliminar márgenes y paddings por defecto */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Estilos generales del cuerpo del documento */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; /* Fuente predeterminada para toda la página */
+  background-color: #f9fafb;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* ----------------- HEADER ----------------- */
+header {
+  background-color: white;
+  padding: 15px 30px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.left-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.logo-header {
+  height: 45px;
+}
+
+.titulo-header {
+  font-size: 25.6px;
+  font-weight: bold;
+  font-family: "Merriweather"
+}
+
+
+/* ----------------- MAIN CONTENT ----------------- */
+/* Contenedor principal del artículo */
+.presentation-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+/* Cabecera del artículo */
+.presentation-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.presentation-header h1 {
+  font-size: 2.5rem;
+  color: #1a1a1a;
+  margin-bottom: 20px;
+  font-family: Fugaz One;
+}
+
+/* Estilos para la imagen de portada */
+.portada {
+    display: flex;
+    flex-wrap: wrap;
+    background: #fff;
+    margin-bottom: 1em;
+    width: 100%;
+    object-fit: cover;
+}
+
+/* Divisor visual entre secciones */
+.divider {
+  height: 1px;
+  background-color: #e0e0e0;
+  margin: 30px 0;
+}
+
+/* Estilos para la sección de cita */
+.quote-section {
+  background-color: #f8f9fa;
+  padding: 30px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+}
+
+.quote {
+  font-size: 1.2rem;
+  font-style: italic;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.quote-author {
+  font-weight: bold;
+  color: #333;
+}
+
+/* Estilos para el contenido de texto */
+.content-section p {
+  margin-bottom: 20px;
+  color: #444;
+}
+
+/* ----------------- FOOTER ----------------- */
+footer {
+  background-color: #c8deca;
+  padding: 1rem 2rem;
+  border-top: 1px solid #ddd;
+  margin-top: 60px;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Estilos para los enlaces del footer */
+footer nav a {
+  margin-right: 1rem;
+  color: #333;
+  text-decoration: none;
+}
+
+footer nav a:hover {
+  color: #1b8f34;
+  text-decoration: underline;
+}
+
+/* Estilos para los iconos de redes sociales */
+footer .redes img {
+  width: 40px;
+  margin: 0 1em;
+}
+.portada-img{
+  max-width: 800px;
+  width: 100%;
+  height: auto;
+}

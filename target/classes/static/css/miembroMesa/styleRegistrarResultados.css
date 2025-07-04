@@ -1,0 +1,341 @@
+/* ===== ESTILOS BÁSICOS Y RESETEO ===== */
+        * {
+            margin: 0; /* Elimina los márgenes predeterminados */
+            padding: 0; /* Elimina el padding predeterminado */
+            box-sizing: border-box; /* Hace que el padding no afecte al ancho total */
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; /* Fuente predeterminada para toda la página */
+        }
+
+        /* Configuración básica del cuerpo de la página */
+        body {
+            min-height: 100vh; /* Altura mínima de toda la ventana */
+            display: flex;
+            flex-direction: column; /* Organiza los elementos en columna */
+        }
+
+        /* ===== ESTILOS DEL ENCABEZADO ===== */
+         /* Estilos del encabezado */
+        header {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #10920b; /* Color púrpura para el encabezado */
+            border-bottom: 1px solid #116500;
+            color: white;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+        
+        .logo h1 {
+            margin-left: 15px;
+            font-size: 18px;
+            color: white;
+            font-weight: bold;
+        }
+        
+        nav {
+            margin-left: 30px;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-right: 20px;
+        }
+        
+        nav ul li a {
+            text-decoration: none;
+            color: white;
+            font-weight: 500;
+            transition: opacity 0.3s ease;
+        }
+        
+        nav ul li a:hover {
+            opacity: 0.8;
+        }
+
+
+        /* ===== ESTILOS DEL CONTENIDO PRINCIPAL ===== */
+        main {
+            flex: 1;
+            padding: 1.5rem;
+            max-width: 800px; /* Limita el ancho máximo para mejor legibilidad */
+            margin: 0 auto; /* Centra el contenido */
+            width: 100%;
+        }
+
+        /* ===== ESTILOS DEL CALENDARIO ===== */
+        /* Contenedor del calendario semanal */
+        .calendar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+
+        /* Cada día del calendario */
+        .day {
+            width: 14%; /* Aproximadamente 1/7 del ancho (7 días) */
+            text-align: center;
+            padding: 1rem 0.5rem;
+            border-radius: 8px;
+        }
+
+        /* Día activo/seleccionado */
+        .day.active {
+            background-color: #e0f7e0; /* Verde claro para destacar */
+        }
+
+        /* Número del día */
+        .day-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* Nombre del día */
+        .day-name {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        /* ===== ESTILOS DE LOS PARTIDOS ===== */
+        /* Tarjeta de partido */
+        .match {
+            background-color: #f0f0f0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            position: relative; /* Para posicionar el botón de añadir */
+        }
+
+        /* Contenedor de equipo */
+        .team {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 30%;
+        }
+
+        /* Nombre del equipo */
+        .team-name {
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        /* Logo del equipo */
+        .team-logo {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: contain;
+        }
+
+        /* Texto "VS" entre equipos */
+        .vs {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* Contenedor del puntaje */
+        .score-container {
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        /* Etiqueta del puntaje */
+        .score-label {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 0.3rem;
+        }
+
+        /* Campo de entrada del puntaje */
+        .score-input {
+            width: 60px;
+            padding: 0.3rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        /* Botón para añadir puntajes */
+        .add-score-btn {
+            background-color: #0a7c0a; /* Verde corporativo */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 0.6rem 1rem;
+            cursor: pointer;
+            font-weight: 500;
+            position: absolute; /* Posicionamiento absoluto */
+            right: 1rem; /* A 1rem del borde derecho */
+            top: 50%; /* Centrado verticalmente */
+            transform: translateY(-50%); /* Ajuste para centrado perfecto */
+        }
+
+        /* Icono dentro del botón */
+        .add-score-btn i {
+            margin-left: 6px;
+        }
+
+        /* ===== ESTILOS DEL PIE DE PÁGINA ===== */
+        footer {
+            background-color: #e0ebd7; /* Verde muy claro */
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Sección izquierda del footer */
+        .footer-left {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Logo en el footer */
+        .footer-logo {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        /* Texto de copyright */
+        .copyright {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        /* Sección central del footer */
+        .footer-center {
+            display: flex;
+        }
+
+        /* Enlaces en el footer */
+        .footer-center a {
+            margin: 0 10px;
+            color: #333;
+            text-decoration: none;
+            font-size: 0.8rem;
+        }
+
+        /* Sección derecha del footer */
+        .footer-right {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Contenedor de iconos de redes sociales */
+        .social-icons {
+            display: flex;
+            margin-right: 15px;
+        }
+
+        /* Iconos individuales de redes sociales */
+        .social-icons a {
+            margin: 0 5px;
+            color: #333;
+            font-size: 1.2rem;
+        }
+
+        /* Contenedor de badges de aplicaciones */
+        .app-badges {
+            display: flex;
+        }
+
+        /* Imágenes de badges de aplicaciones */
+        .app-badges img {
+            height: 30px;
+            margin-left: 10px;
+        }
+
+        /* ===== DISEÑO RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            /* Ajustes para el calendario en pantallas pequeñas */
+            .calendar {
+                overflow-x: auto; /* Permite desplazamiento horizontal */
+                padding-bottom: 1rem;
+            }
+            
+            .day {
+                min-width: 60px; /* Ancho mínimo para cada día */
+            }
+            
+            /* Ajustes para los partidos en pantallas pequeñas */
+            .match {
+                flex-direction: column;
+                padding: 1rem;
+                padding-bottom: 4rem; /* Espacio para el botón */
+            }
+            
+            .team {
+                width: 100%;
+                flex-direction: row;
+                justify-content: space-between;
+                margin-bottom: 1rem;
+            }
+            
+            .vs {
+                margin: 1rem 0;
+            }
+            
+            /* Reposiciona el botón en móviles */
+            .add-score-btn {
+                top: auto;
+                bottom: 1rem;
+                right: 50%;
+                transform: translateX(50%);
+            }
+            
+            /* Reorganiza el footer en pantallas pequeñas */
+            footer {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .footer-left, .footer-center, .footer-right {
+                margin-bottom: 1rem;
+            }
+            
+            .social-icons, .app-badges {
+                justify-content: center;
+            }
+            
+            /* Reorganiza el header en pantallas pequeñas */
+            header {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            
+            nav {
+                margin-left: 0;
+                margin-top: 1rem;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            nav ul li {
+                margin: 5px 10px;
+            }
+        }
