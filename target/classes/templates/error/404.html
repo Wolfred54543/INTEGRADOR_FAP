@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <!-- Configuración básica del documento -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <!-- Título de la página de error -->
+  <title>Error 404 - Página no encontrada</title>
+  <!-- Enlace a la hoja de estilos específica para la página 404 -->
+  <link rel="stylesheet" th:href="@{/css/404.css}">
+</head>
+<body>
+  <!-- Contenedor principal de la página de error -->
+  <main class="container">
+    <!-- Sección de texto con información del error -->
+    <section class="text">
+      <!-- Código de error -->
+      <p class="error-code">404 error</p>
+      <!-- Título principal -->
+      <h1>Página no encontrada</h1>
+      <!-- Mensaje explicativo -->
+      <p class="message">
+        Lo sentimos, la página que busca no existe. Aquí tiene algunos enlaces útiles:
+      </p>
+      <!-- Botones de acción -->
+      <div class="buttons">
+        <!-- Botón para volver atrás -->
+        <button onclick="history.back()" class="btn btn-outline">← Atrás</button>
+        <!-- Botón para ir al inicio -->
+        <a href="/" class="btn btn-primary">Página de Inicio</a>
+      </div>
+    </section>
+    
+    <!-- Sección de imagen ilustrativa -->
+    <section class="image">
+      <!-- Imagen representativa del error 404 -->
+       <img th:src="@{/imagenes/404.png}" alt="contactanos" class="imagen-registro">
+      <!-- Elemento decorativo -->
+      <div class="decoración"></div>
+    </section>
+  </main>
+</body>
+</html>

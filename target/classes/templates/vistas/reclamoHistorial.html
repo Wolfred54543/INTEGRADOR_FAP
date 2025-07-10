@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <head th:replace="~{componentes/delegado/head :: head}"></head>
+    <link rel="stylesheet" th:href="@{/css/delegado/styleReclamoHistorial.css}">
+    <!-- Enlace a la hoja de estilos CSS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- ENCABEZADO: Contiene el logo, título y navegación -->
+    <header th:replace="~{componentes/delegado/header :: header}"></header>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main>
+        <!-- Encabezado de la página con título y filtro -->
+        <div class="page-header">
+            <h1>Historial de Reclamos</h1>
+            <!-- Filtro de estado de reclamos -->
+            <div class="filter-container">
+                <form method="get" action="#" style="padding-left: 50px; margin-bottom: 20px;">
+                    <label for="estado" class="filter-label">Filtrar por estado:</label>
+                    <select class="filter-dropdown" id="estado" name="estado" onchange="this.form.submit()">
+                        <option value="" th:selected="${estado == null}">Todos</option>
+                        <option th:value="abierto" th:selected="${estado == 'abierto'}">Abierto</option>
+                        <option th:value="cerrado" th:selected="${estado == 'cerrado'}">Cerrado</option>
+                    </select>
+                </form>
+            </div>
+        </div>
+
+        <!-- Primera tarjeta de reclamo -->
+        <th:block th:each="reclamo, iterStat : ${reclamos}">
+            <div class="reclamo-card">
+                <div class="reclamo-content">
+                        <p class="reclamo-description"><span th:text="${iterStat.index + 1}">1</span><span>|</span></p>
+                        <h2 class="reclamo-title" th:text="${reclamo.recMotivo}">Motivo del Reclamo</h2>
+                        <p class="reclamo-description"><strong>Descripción:</strong> <span th:text="${reclamo.recDescripcion}"></span></p>
+                        <p class="reclamo-description"><strong>Fecha del Reclamo:</strong> <span th:text="${reclamo.recFecha}"></span></p>
+                        <p class="reclamo-description"><strong>Hora del Reclamo:</strong> <span th:text="${reclamo.recHora}"></span></p>
+                        <p class="reclamo-description"><strong>Partido de Referencia:</strong> <span th:text="${reclamo.partidoReferencia.equipoLocal.equNombre + ' vs ' 
+                                                                                                            + reclamo.partidoReferencia.equipoVisitante.equNombre + ' | Fecha: ' 
+                                                                                                            + reclamo.partidoReferencia.parFecha + ' | Hora: ' 
+                                                                                                            + reclamo.partidoReferencia.parHora}"></span></p>
+                        <p class="reclamo-action"><strong>Solicitud de Revision:</strong> <span th:text="${reclamo.recSolicitud}"></span></p>
+                </div>
+                <div class="reclamo-response">
+                    <h3 class="response-header">Administración</h3>
+                    
+                    <div class="status-indicator">
+                        <div class="dot"></div>
+                         <p><strong>Estado:</strong> <span th:text="${reclamo.recEstado}">Abierto</span></p>
+                    </div>
+
+                    <div th:if="${reclamo.recRespuesta != null}">
+                        <p><strong>Respuesta:</strong></p>
+                        <p class="response-text" th:text="${reclamo.recRespuesta}">Texto de la respuesta</p>
+                    </div>
+                    
+                    <div th:if="${reclamo.recRespuesta == null}">
+                        <p>Este reclamo está en evaluación.</p>
+                    </div>
+                </div>   
+            </div>
+        </th:block>
+        
+    </main>
+
+      <!-- PIE DE PÁGINA: Dividido en tres secciones -->
+      <header th:replace="~{componentes/delegado/footer :: footer}"></header>
+</body>
+</html>
+

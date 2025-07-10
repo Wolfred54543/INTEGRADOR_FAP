@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:replace="~{componentes/invitado/head :: head}"></head>
+    <link rel="stylesheet" th:href="@{/css/invitado/styleNoticias.css}">
+    <link rel="stylesheet" th:href="@{/css/invitado/styleHeader.css}">
+    <link rel="stylesheet" th:href="@{/css/invitado/stylePartidos.css}">
+</head>
+
+<body>
+<header th:replace="~{componentes/invitado/header :: header}"></header>
+
+<main class="noticias-main">
+    <!--NOTICIAS PRINCIPALES -->
+    <section class="noticia-principal">
+        <th:block th:if="${#lists.isEmpty(noticiasPrincipales)}">
+            <p style="text-align: center; font-style: italic; color: gray;">No hay noticias principales por el momento.</p>
+        </th:block>
+
+        <th:block th:unless="${#lists.isEmpty(noticiasPrincipales)}" th:each="noticia : ${noticiasPrincipales}">
+            <div class="noticia-imagen">
+                <img th:src="@{/imagenes/administrador/imgNoticias/{img}(img=${noticia.notImagen})}" alt="Imagen noticia principal">
+            </div>
+            <div class="noticia-texto">
+                <p class="autor-fecha" th:text="${noticia.notAutor != null ? noticia.notAutor : 'Anónimo'}"></p>
+                <h2>
+                    <a th:href="@{/postNoticia/{id}(id=${noticia.notId})}" style="text-decoration: none; color: black;" th:text="${noticia.notTitulo}">Título</a>
+                </h2>
+                <b th:text="${noticia.notSubtitulo}">Subtítulo</b><br><br>
+                <p class="quote" th:text="${#strings.abbreviate(noticia.notDescripcion, 300)}">Descripción o contenido de la noticia</p><br>
+                <p class="autor-fecha"
+                   th:text="${noticia.notFechaCreacion != null ? #dates.format(noticia.notFechaCreacion, 'dd MMMM yyyy') : 'Sin fecha'}">
+                </p>
+            </div>
+            <div class="divider"></div>
+        </th:block>
+    </section>
+
+    <!--NOTICIAS SECUNDARIAS -->
+    <aside class="noticias-secundarias">
+        <th:block th:if="${#lists.isEmpty(noticiasSecundarias)}">
+            <p style="text-align: center; font-style: italic; color: gray;">No hay noticias secundarias por el momento.</p>
+        </th:block>
+
+        <th:block th:unless="${#lists.isEmpty(noticiasSecundarias)}" th:each="noticia : ${noticiasSecundarias}">
+            <div class="noticia-secundaria">
+                <img th:src="@{/imagenes/administrador/imgNoticias/{img}(img=${noticia.notImagen})}" alt="Imagen noticia secundaria">
+                <div>
+                    <p class="autor-fecha">
+                        <span th:text="${noticia.notAutor != null && noticia.notAutor != '' ? noticia.notAutor : 'Anónimo'}"></span>
+                    </p>
+                    <p class="autor-fecha"
+                       th:text="${noticia.notFechaCreacion != null ? #dates.format(noticia.notFechaCreacion, 'dd MMMM yyyy') : 'Sin fecha'}">
+                    </p>
+                    <h3>
+                        <a th:href="@{/postNoticia/{id}(id=${noticia.notId})}" style="text-decoration: none; color: black;"
+                           th:text="${noticia.notTitulo}">Título</a>
+                    </h3>
+                    <p th:text="${#strings.abbreviate(noticia.notSubtitulo, 70)}">Subtítulo</p>
+                </div>
+            </div>
+        </th:block>
+    </aside>
+</main>
+
+<!-- PIE DE PÁGINA -->
+<footer th:replace="~{componentes/miembroMesa/footer :: footer}"></footer>
+
+</body>
+</html>

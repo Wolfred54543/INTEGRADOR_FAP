@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:replace="~{componentes/administrador/head :: head}"></head>
+<body>
+    <!-- Encabezado -->
+    <header th:replace="~{componentes/administrador/header :: header}"></header>
+
+    <!-- Contenido principal -->
+    <div class="container">
+        <div class="header-actions">
+            <h2>Reclamos</h2>
+        </div>
+        
+        <!-- Campo de búsqueda con icono de lupa -->
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Buscar Reclamo">
+        </div>
+        
+        <!-- Tabla de reclamos -->
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nro</th>
+                        <th>Motivo</th>
+                        <th>Descripción</th>
+                        <th>Solicitud</th>
+                        <th>Fecha del Reclamo</th>
+                        <th>Hora del Reclamo</th>
+                        <th>Partido de Referencia</th>
+                        <th>Estado</th>
+                        <th>Respuesta</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="reclamo, iterStat : ${reclamos}">
+                        <td th:text="${iterStat.index + 1}">1</td>
+                        <td th:text="${reclamo.recMotivo}">Motivo del Reclamo</td>
+                        <td th:text="${reclamo.recDescripcion}">Descripción</td>
+                        <td th:text="${reclamo.recSolicitud}">Solicitud</td>
+                        <td th:text="${reclamo.recFecha}">Fecha</td>
+                        <td th:text="${reclamo.recHora}">Hora</td>
+                        <td th:text="${reclamo.partidoReferencia.equipoLocal.equNombre + ' vs ' 
+                                     + reclamo.partidoReferencia.equipoVisitante.equNombre + ' | Fecha: ' 
+                                     + reclamo.partidoReferencia.parFecha + ' | Hora: ' 
+                                     + reclamo.partidoReferencia.parHora}">
+                            Partido de Ref.
+                        </td>
+                        <td th:text="${reclamo.recEstado}">Estado</td>
+                        <td th:text="${reclamo.recRespuesta != null ? reclamo.recRespuesta : 'Sin respuesta'}" style="color: green;">Respuesta</td>
+
+                        <td class="actions">
+                            <form method="post" th:action="@{/eliminarReclamo}">
+                                <input type="hidden" name="id" th:value="${reclamo.recId}" />
+                                <button class="btn-delete" type="submit" 
+                                        onclick="return confirm('¿Estás seguro de que deseas eliminar este reclamo?');">
+                                    🗑️
+                                </button>
+                            </form>
+                            <a th:href="@{/reclamoFormularioRespuesta/{id}(id=${reclamo.recId})}">✏️</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+                <!-- Sistema de paginación -->
+        <div class="pagination">
+            <!-- Flecha para ir a la página anterior -->
+            <span class="pagination-arrow">
+                <i class="fas fa-chevron-left"></i>
+            </span>
+            <!-- Números de página -->
+            <span class="pagination-item active">1</span> <!-- Página actual -->
+            <span class="pagination-item">2</span>
+            <span class="pagination-item">3</span>
+            <!-- Puntos suspensivos para indicar páginas omitidas -->
+            <span class="pagination-dots">...</span>
+            <span class="pagination-item">8</span>
+            <span class="pagination-item">9</span>
+            <span class="pagination-item">10</span>
+            <!-- Flecha para ir a la página siguiente -->
+            <span class="pagination-arrow">
+                <i class="fas fa-chevron-right"></i>
+            </span>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${campeonato.camId != null} ? 'Editar Campeonato' : 'Nuevo Campeonato'">Formulario</title>
+    <link rel="stylesheet" th:href="@{/css/administrador/asociados.css}">
+    <link rel="stylesheet" th:href="@{/css/administrador/editarAsociados.css}">
+    <head th:replace="~{componentes/administrador/head :: head}"></head>
+</head>
+<body>
+    <!-- ENCABEZADO: Contiene el logo, título y navegación -->
+    <header th:replace="~{componentes/administrador/header :: header}"></header>
+
+    <div class="container">
+        <div class="header-actions">
+            <h2 th:text="${campeonato.camId != null} ? 'Editar Campeonato' : 'Registrar un Nuevo Campeonato'"></h2>
+        </div>
+        
+        <div class="form-container">
+            <form th:action="@{/guardarCampeonato}" th:object="${campeonato}" method="post">
+                <input type="hidden" th:field="*{camId}"/>
+
+                <!-- Nombre -->
+                <div class="form-group">
+                    <label for="camNombre">Nombre del campeonato:</label>
+                    <input type="text" id="camNombre" th:field="*{camNombre}" required />
+                </div>
+
+                <!-- Fecha de creación -->
+                <div class="form-group">
+                    <label for="camFechaCreacion">Fecha de creación:</label>
+                    <input type="date" id="camFechaCreacion" th:field="*{camFechaCreacion}" required />
+                </div>
+
+                <!-- Estado -->
+                <div class="form-group">
+                    <label for="camEstado">Estado:</label>
+                    <select id="camEstado" th:field="*{camEstado}" required>
+                        <option value="" disabled selected>Selecciona un estado</option>
+                        <option value="Activo">Activo</option>
+                        <option value="Finalizado">Finalizado</option>
+                        <option value="Pausado">Pausado</option>
+                        <option value="Cancelado">Cancelado</option>
+                    </select>
+                </div>
+
+
+                <!-- Selección de Década -->
+                <div class="form-group">
+                    <label for="decada">Década:</label>
+                    <select id="decada" th:field="*{decada}" required>
+                        <option value="" disabled selected>Selecciona una década</option>
+                        <option th:each="dec : ${decadas}"
+                                th:value="${dec.decId}"
+                                th:text="${dec.decMes +' de '+ dec.anioInicio}">
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Total máximo de equipos -->
+                <div class="form-group">
+                    <label for="camTotalEquipos">Cantidad máxima de equipos:</label>
+                    <input type="number" id="camTotalEquipos" th:field="*{camTotalEquipos}" min="1" required />
+                </div>
+
+                <!-- Botones -->
+                <div class="form-group">
+                    <button type="submit">Guardar</button>
+                    <a th:href="@{/campeonatos}" class="back_button">Cancelar</a>
+                </div>
+
+            </form>
+        </div>
+</div>
+</body>
+</html>

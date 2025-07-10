@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:replace="~{componentes/administrador/head :: head}"></head>
+</head>
+<body>
+<header th:replace="~{componentes/administrador/header :: header}"></header>
+
+<div class="container">
+    <div class="header-actions">
+        <h2>Partidos</h2>
+    </div>
+
+    <div class="search-container">
+        <input type="text" class="search-input" placeholder="Buscar Partido">
+    </div>
+
+    <!-- Si hay solo un campeonato -->
+<div th:if="${soloUnCampeonato}">
+    <h3 th:text="${campeonato.camNombre}"></h3>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nro</th>
+                    <th>Equipo 1</th>
+                    <th>Equipo 2</th>
+                    <th>Delegado 1</th>
+                    <th>Delegado 2</th>
+                    <th>Fecha</th>
+                    <th>Hora</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="partido, iterStat : ${partidos}">
+                    <td th:text="${iterStat.index + 1}"></td>
+                    <td th:text="${partido.equipoLocal.equNombre}"></td>
+                    <td th:text="${partido.equipoVisitante.equNombre}"></td>
+                    <td th:text="${partido.equipoLocal.delegado.nombre + ' ' + partido.equipoLocal.delegado.apellido}"></td>
+                    <td th:text="${partido.equipoVisitante.delegado.nombre + ' ' + partido.equipoVisitante.delegado.apellido}"></td>
+                    <td th:text="${partido.parFecha != null ? #temporals.format(partido.parFecha, 'dd/MM/yyyy') : 'Sin fecha'}"></td>
+                    <td th:text="${partido.parHora != null ? #temporals.format(partido.parHora, 'HH:mm') : 'Sin hora'}"></td>
+                    <td class="actions">
+                        <a th:href="@{/editarPartido/{id}(id=${partido.parId})}" style="text-decoration: none; color: green;">✏️ Asignar Fecha y Hora</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+    <!-- Si hay varios campeonatos -->
+    <div th:unless="${soloUnCampeonato}" th:each="entry : ${partidosPorCampeonato}">
+        <h3 th:text="${entry.key.camNombre}"></h3>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nro</th>
+                        <th>Equipo 1</th>
+                        <th>Equipo 2</th>
+                        <th>Delegado 1</th>
+                        <th>Delegado 2</th>
+                        <th>Fecha</th>
+                        <th>Hora</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="partido, iterStat : ${entry.value}">
+                        <td th:text="${iterStat.index + 1}"></td>
+                        <td th:text="${partido.equipoLocal.equNombre}"></td>
+                        <td th:text="${partido.equipoVisitante.equNombre}"></td>
+                        <td th:text="${partido.equipoLocal.delegado.nombre + ' ' + partido.equipoLocal.delegado.apellido}"></td>
+                        <td th:text="${partido.equipoVisitante.delegado.nombre + ' ' + partido.equipoVisitante.delegado.apellido}"></td>
+                        <td th:text="${partido.parFecha != null ? #temporals.format(partido.parFecha, 'dd/MM/yyyy') : 'Sin fecha'}"></td>
+                        <td th:text="${partido.parHora != null ? #temporals.format(partido.parHora, 'HH:mm') : 'Sin hora'}"></td>
+                        <td class="actions">
+                            <a th:href="@{/editarPartido/{id}(id=${partido.parId})}">✏️ Asignar Fecha y Hora</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="header-actions">
+        <a href="/campeonatos" class="btn-add" style="padding: 7px; font-size:14px;text-decoration: none;">Volver</a>
+    </div>
+</div>
+
+</body>
+</html>

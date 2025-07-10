@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Administrar | Campeonatos</title>
+    <head th:replace="~{componentes/administrador/head :: head}"></head>
+    <link rel="stylesheet" th:href="@{/css/administrador/comunicados.css}">
+    <link rel="stylesheet" th:href="@{/css/administrador/campeonatos.css}">
+</head>
+<body>
+    <header th:replace="~{componentes/administrador/header :: header}"></header>
+    
+    <div class="page-header" style="background: none; color: black;">
+        <h1 class="page-title">Administrar Campeonatos</h1>
+        <p class="page-subtitle">Crear, editar y gestionar campeonatos</p>
+    </div>
+    <div class="page-header" style="background: none;">
+        <a th:href="@{/nuevoCampeonato}" class="nuevo-btn">Crear un Nuevo Campeonato +</a>
+    </div>
+
+
+    <div th:each="campeonato : ${campeonatos}" class="tarjeta-campeonato">
+        <div class="tarjeta-header" th:text="${campeonato.camNombre}"></div>
+        <div class="tarjeta-detalle"><strong>Fecha Creación:</strong> <span th:text="${campeonato.camFechaCreacion}"></span></div>
+        <div class="tarjeta-detalle"><strong>Estado:</strong> <span th:text="${campeonato.camEstado}"></span></div>
+        <div class="tarjeta-detalle"><strong>Máx. Equipos:</strong> <span th:text="${campeonato.camTotalEquipos}"></span></div>
+        <div class="tarjeta-detalle"><strong>Década:</strong> <span th:text="${campeonato.decada.decMes + ' de ' + campeonato.decada.anioInicio}"></span></div>
+
+        <div class="acciones">
+            <a th:href="@{'/editarCampeonato/' + ${campeonato.camId}}">Editar</a>
+
+            <form th:action="@{'/eliminarCampeonato/' + ${campeonato.camId}}" method="post">
+                <button type="submit" class="eliminar-btn" onclick="return confirm('¿Estás seguro de eliminar este campeonato?')">Eliminar</button>
+            </form>
+
+            <a th:href="@{'/asignarEquipos/' + ${campeonato.camId}}" class="equipos-btn">Añadir Equipos</a>
+            <a th:href="@{'/partidos/campeonato/' + ${campeonato.camId}}">Asignar Fecha y Hora de los Partidos</a>
+        </div>
+    </div>
+</body>
+</html>
+

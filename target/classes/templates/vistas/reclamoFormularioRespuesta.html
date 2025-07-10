@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Licenciado</title>
+    <link rel="stylesheet" th:href="@{/css/administrador/asociados.css}">
+    <link rel="stylesheet" th:href="@{/css/administrador/editarAsociados.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+        <!-- Encabezado -->
+        <header th:replace="~{componentes/administrador/header :: header}"></header>
+
+    <!-- Contenido principal -->
+    <div class="container">
+        <div class="header-actions">
+            <h2>Responder Reclamo</h2>
+        </div>
+    <div class="form-container">
+        <p><strong>Motivo:</strong> <div th:text="${reclamo.recMotivo}"></div></p><hr><br>
+        <p><strong>Descripción:</strong> <div th:text="${reclamo.recDescripcion}"></div></p><hr><br>
+        <p><strong>Solicitud:</strong> <div th:text="${reclamo.recSolicitud}"></div></p><hr><br>
+        <p><strong>Fecha del Reclamo:</strong> <div th:text="${reclamo.recFecha}"></div></p><hr><br>
+        <p><strong>Hora del Reclamo:</strong> <div th:text="${reclamo.recHora}"></div></p><hr><br>
+        <p><strong>Partido de Referencia:</strong> <div th:text="${reclamo.partidoReferencia.equipoLocal.equNombre + ' vs ' 
+                                                                 + reclamo.partidoReferencia.equipoVisitante.equNombre + ' | Fecha: ' 
+                                                                 + reclamo.partidoReferencia.parFecha + ' | Hora: ' 
+                                                                 + reclamo.partidoReferencia.parHora}"></div></p><hr><br>
+        <form method="post" th:action="@{/responderReclamo}">
+            <input type="hidden" name="id" th:value="${reclamo.recId}" />
+            <label for="respuesta"><strong>Respuesta del administrador:</strong></label><br>
+            <br><textarea class="form-textarea" name="respuesta" id="respuesta" rows="6" style="width:100%; resize: none;" required></textarea>
+            <br><br><button type="submit" class="btn-principal">Enviar Respuesta</button>
+        </form>
+        <a href="/reclamoRespuesta" class="back_button">Volver a la lista de Reclamos</a>
+    </div>
+</body>
+</html>

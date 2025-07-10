@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Licenciado</title>
+    <link rel="stylesheet" th:href="@{/css/administrador/asociados.css}">
+    <link rel="stylesheet" th:href="@{/css/administrador/editarAsociados.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+        <!-- Encabezado -->
+        <header th:replace="~{componentes/administrador/header :: header}"></header>
+
+    <!-- Contenido principal -->
+    <div class="container">
+        <div class="header-actions">
+            <h2>Editar Usuario</h2>
+        </div>
+    <div class="form-container">
+        <form action="#" th:action="@{/actualizarUsuario}" th:object="${usuario}" method="post">
+            <input type="hidden" th:field="*{usuId}"/> <!-- Campo oculto para el ID -->
+            
+            <div class="form-group">
+                <label for="nombre">Nombres:</label>
+                <input type="text" id="nombre" th:field="*{nombre}" required>
+            </div>
+            <div class="form-group">
+                <label for="nombre">Apellidos:</label>
+                <input type="text" id="nombre" th:field="*{apellido}" required>
+            </div>
+            <div class="form-group">
+                <label for="nombre">Fecha de Nacimiento:</label>
+                <input type="date" id="nombre" th:field="*{fechaNacimiento}" required>
+            </div>
+            <div class="form-group">
+                <label for="nombre">DNI:</label>
+                <input type="text" id="nombre" th:field="*{dni}" required>
+            </div>
+            <div class="form-group">
+                <label for="nombre">Email:</label>
+                <input type="text" id="nombre" th:field="*{email}" required>
+            </div>
+            <div class="form-group">
+                <label for="contrasenia">Contraseña:</label>
+                <input type="password" id="contrasenia" th:field="*{contrasenia}" required placeholder="Ingrese la contraseña">
+            </div>
+            <div class="form-group">
+                <label for="nombre">Telefono:</label>
+                <input type="text" id="nombre" th:field="*{telefono}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="decada">Decada:</label>
+                <select id="decada" th:field="*{decada.decId}" required>
+                     <option th:each="decada : ${decadas}" th:value="${decada.decId}" th:text="${decada.anioInicio} + ' (' + ${decada.decMes} + ')'"></option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="decada">Tipo:</label>
+                <select id="decada" th:field="*{tipo.tipoId}" required>
+                     <option th:each="tipo : ${tipos}" th:value="${tipo.tipoId}" th:text="${tipo.tipoNombre}"></option>
+                </select>
+            </div>
+
+            <!-- <div class="form-group">
+                <label for="decada">Rol:</label>
+                <select id="decada" th:field="*{rol.rolId}" required>
+                     <option th:each="rol : ${roles}" th:value="${rol.rolId}" th:text="${rol.nombre}"></option>
+                </select>
+            </div> -->
+
+            <button type="submit">Actualizar</button>
+        </form>
+        <a href="/registro" class="back_button">Volver a la lista de Jugadores</a>
+    </div>
+</body>
+</html>

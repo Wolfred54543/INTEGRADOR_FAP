@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{componentes/administrador/head :: head}"></head>
+<body>
+    <header th:replace="~{componentes/administrador/header :: header}"></header>
+ <!-- Contenido principal -->
+    <div class="container">
+        <div class="header-actions">
+            <h2>Noticias</h2>
+            <button class="btn-add" onclick="openModal()">Agregar <span>+</span></button>
+        </div>
+        
+        <!-- Campo de búsqueda con icono de lupa -->
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Buscar Noticia">
+        </div>
+        
+        <!-- Tabla de usuarios -->
+        <div class="table-container">
+  <table>
+        <thead>
+            <tr>
+                <th>Nro</th>
+                <th>Tipo</th>
+                <th>Titulo</th>
+                <th>Subtitulo</th>
+                <th>Descripcion</th>
+                <th>Autor</th>
+                <th>Imagen</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+                 <tr th:each="noticia, iterStat : ${noticias}">
+                    <td th:text="${iterStat.index + 1}">1</td>
+                    <td th:text="${noticia.notTipo != null ? noticia.notTipo : 'Sin tipo'}">Tipo</td>
+                    <td th:text="${noticia.notTitulo != null ? noticia.notTitulo : 'Sin titulo'}">Titulo</td>
+                    <td th:text="${noticia.notSubtitulo != null ? noticia.notSubtitulo : 'Sin Subtitulo'}">Subtitulo</td>
+                    <td th:text="${noticia.notDescripcion != null ? noticia.notDescripcion : 'Sin descripcion'}">Descripcion</td>
+                     <td th:text="${noticia.notAutor != null ? noticia.notAutor : 'Sin Autor'}">Autor</td>
+                    <td><img th:src="@{/imagenes/administrador/imgNoticias/{nombreImagen}(nombreImagen=${noticia.notImagen})}" alt="Img de la noticia" width="130" height="100" style="border-radius: 10px;" class="img_comunicado"/></td>
+                    <td class="actions">
+                        <form th:action="@{/eliminarNoticia/{id}(id=${noticia.notId})}" method="post" onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta noticia?');">
+                            <button class="btn-delete" type="submit">🗑️</button>
+                        </form>
+                        <a th:href="@{/editarNoticia/{id}(id=${noticia.notId})}">✏️</a>
+                    </td>
+                </tr> 
+        </tbody>
+    </table>
+        </div>
+        
+        <!-- Sistema de paginación -->
+        <div class="pagination">
+            <!-- Flecha para ir a la página anterior -->
+            <span class="pagination-arrow">
+                <i class="fas fa-chevron-left"></i>
+            </span>
+            <!-- Números de página -->
+            <span class="pagination-item active">1</span> <!-- Página actual -->
+            <span class="pagination-item">2</span>
+            <span class="pagination-item">3</span>
+            <!-- Puntos suspensivos para indicar páginas omitidas -->
+            <span class="pagination-dots">...</span>
+            <span class="pagination-item">8</span>
+            <span class="pagination-item">9</span>
+            <span class="pagination-item">10</span>
+            <!-- Flecha para ir a la página siguiente -->
+            <span class="pagination-arrow">
+                <i class="fas fa-chevron-right"></i>
+            </span>
+        </div>
+    </div>
+    
+    <div class="modal" id="registroModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Registrar Nueva Noticia</h2>
+            </div>
+            <form action="#" th:action="@{/registrarNoticias}" th:object="${noticia}" method="post">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <select id="tipo" th:field="*{notTipo}" required>
+                            <option value="">-- Selecciona el tipo de noticia --</option>
+                            <option value="principal">Principal</option>
+                            <option value="secundaria">Secundaria</option>
+                        </select>
+                    </div><br>
+                    <div class="form-group">
+                        <label for="nombre">Titulo de la Noticia:</label>
+                        <input type="text" id="nombre" th:field="*{notTitulo}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nombre">Subtitulo de la Noticia:</label>
+                        <input type="text" id="nombre" th:field="*{notSubtitulo}">
+                    </div>
+                    <div class="form-group">
+                        <label for="descripcion">Descripcion de la Noticia:</label>
+                        <textarea class="form-textarea" type="text" id="apellido" th:field="*{notDescripcion}" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="descripcion">Autor de la Noticia:</label>
+                        <input type="text" id="apellido" th:field="*{notAutor}">
+                    </div>
+                    <div class="form-group">
+                        <label for="logo">Imagen del Comunicado:</label>
+                        <input type="file" id="" th:field="*{notImagen}">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn-primary" onclick="submitForm()">Añadir</button>
+                    <button type="button" class="btn-secondary" onclick="closeModal()">Anular</button>
+                </div>
+ 
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openModal() {
+            document.getElementById('registroModal').style.display = 'block';
+        }
+        
+        function closeModal() {
+            document.getElementById('registroModal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

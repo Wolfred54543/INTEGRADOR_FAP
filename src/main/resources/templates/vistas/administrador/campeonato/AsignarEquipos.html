@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Asignar Equipos</title>
+    <link rel="stylesheet" th:href="@{/css/administrador/asociados.css}">
+    <link rel="stylesheet" th:href="@{/css/administrador/editarAsociados.css}">
+    <head th:replace="~{componentes/administrador/head :: head}"></head>
+</head>
+<body>
+    <!-- ENCABEZADO: Contiene el logo, título y navegación -->
+    <header th:replace="~{componentes/administrador/header :: header}"></header>
+
+        <div class="container">
+            <div class="header-actions">
+                <h2 th:text="'Asignar Equipos a: ' + ${campeonato.camNombre}"></h2>
+            </div>     
+        
+            <div th:if="${#lists.isEmpty(equiposAsignados)}" class="form-container">
+            <!-- Formulario solo si aún no hay equipos asignados -->
+            <form th:action="@{/partidos/sorteo}" method="post">
+                <input type="hidden" name="campeonatoId" th:value="${campeonato.camId}" />
+                
+                <div th:each="i : ${indices}" class="form-group">
+                    <label th:for="'equipo' + ${i}">Equipo [[${i + 1}]]:</label>
+                    <select name="equiposSeleccionados" required>
+                        <option value="" disabled selected>Selecciona un equipo</option>
+                        <option th:each="equipo : ${equiposDisponibles}"
+                                th:value="${equipo.equId}"
+                                th:text="${equipo.equNombre}">
+                        </option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button type="submit">Generar Fixture</button>
+                    <a th:href="@{/campeonatos}" class="back_button">Volver al inicio</a>
+                </div>
+            </form>
+        </div>
+
+        <div th:unless="${#lists.isEmpty(equiposAsignados)}" class="container">
+            <div class="form-container" style="text-align: justify; font-size: 18px;">
+                <h2 style="text-align: center; color: rgb(220, 200, 20);">No se puden añadir equipos</h2><br><hr><br>
+                <p>Ya se generó el fixture para este campeonato. Por lo tanto ya no se pueden asignar equipos.</p>
+                <a th:href="@{/campeonatos}" class="back_button">Volver al listado de campeonatos</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+  

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:replace="~{componentes/administrador/head :: head}"></head>
+</head>
+<body>
+    <header th:replace="~{componentes/administrador/header :: header}"></header>
+
+    <!-- Contenido principal -->
+    <div class="container">
+        <div class="header-actions">
+            <h2>Jugadores</h2>
+            <button class="btn-add" onclick="openModal()">Agregar <span>+</span></button>
+        </div>
+        
+        <!-- Campo de búsqueda con icono de lupa -->
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Buscar Jugador">
+        </div>
+        
+        <!-- Tabla de usuarios -->
+        <div class="table-container">
+  <table>
+        <thead>
+            <tr>
+                <th>Nro</th>
+                <th>Nombres</th>
+                <th>Apellidos</th>
+                <th>DNI</th>
+                <th>Decada</th>
+                <th>Equipo</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+                 <tr th:each="jugador, iterStat : ${jugadores}">
+                    <td th:text="${iterStat.index + 1}">1</td>
+                    <td th:text="${jugador.jugNombre != null ? jugador.jugNombre : 'Sin nombre'}">Nombre</td>
+                    <td th:text="${jugador.jugApellido != null ? jugador.jugApellido : 'Sin apellido'}">Apellido</td>
+                    <td th:text="${jugador.jugDni != null ? jugador.jugDni : 'Sin DNI'}">DNI</td>
+                    <td th:text="${jugador.decada != null ? jugador.decada.anioInicio + ' | ' + jugador.decada.getDecMes() : 'Sin Decada'}">Decada</td>
+                    <td th:text="${jugador.equipo != null ? jugador.equipo.equNombre : 'Sin Equipo'}">Equipo</td>
+                    <td class="actions">
+                    <form th:action="@{/eliminarJugador/{id}(id=${jugador.jugId})}" method="post" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este jugador?');">
+                    <button class="btn-delete" type="submit">🗑️</button>
+                    </form>
+                        <a th:href="@{/editarJugador/{id}(id=${jugador.jugId})}">✏️</a>
+                        <a th:href="@{/asignarEquipo(jugadorId=${jugador.jugId})}" class="btn-assign" style="text-decoration: none; color: green;"><i class="fas fa-futbol"></i>Asignar Equipo</a>
+                    </td>
+                </tr> 
+        </tbody>
+    </table>
+        </div>
+        
+        <!-- Sistema de paginación -->
+        <div class="pagination">
+            <!-- Flecha para ir a la página anterior -->
+            <span class="pagination-arrow">
+                <i class="fas fa-chevron-left"></i>
+            </span>
+            <!-- Números de página -->
+            <span class="pagination-item active">1</span> <!-- Página actual -->
+            <span class="pagination-item">2</span>
+            <span class="pagination-item">3</span>
+            <!-- Puntos suspensivos para indicar páginas omitidas -->
+            <span class="pagination-dots">...</span>
+            <span class="pagination-item">8</span>
+            <span class="pagination-item">9</span>
+            <span class="pagination-item">10</span>
+            <!-- Flecha para ir a la página siguiente -->
+            <span class="pagination-arrow">
+                <i class="fas fa-chevron-right"></i>
+            </span>
+        </div>
+    </div>
+    
+    <div class="modal" id="registroModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Registrar Nuevo Equipo</h2>
+            </div>
+            <form th:action="@{/registrarJugadores}" th:object="${jugador}" method="post">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="nombre">Nombres del Jugador:</label>
+                        <input type="text" id="nombre" th:field="*{jugNombre}" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="nombre">Apellidos del Jugador:</label>
+                        <input type="text" id="nombre" th:field="*{jugApellido}" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="nombre">DNI del Jugador:</label>
+                        <input type="text" id="nombre" th:field="*{jugDni}" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="decada">Seleccionar Década:</label>
+                        <select id="decada" th:field="*{decada}" required>
+                            <option value="" disabled selected>Seleccione una década</option>
+                            <option th:each="decada : ${decadas}" th:value="${decada.decId}" th:text="${decada.anioInicio} + ' (' + ${decada.decMes} + ')'"></option>
+                        </select>
+                    </div>
+               </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn-primary" onclick="submitForm()">Añadir</button>
+                    <button type="button" class="btn-secondary" onclick="closeModal()">Anular</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openModal() {
+            document.getElementById('registroModal').style.display = 'block';
+        }
+        
+        function closeModal() {
+            document.getElementById('registroModal').style.display = 'none';
+        }
+    </script>

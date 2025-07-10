@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{componentes/administrador/head :: head}"></head>
+<body>
+    <!-- Encabezado -->
+    <header th:replace="~{componentes/administrador/header :: header}"></header>
+    
+    <!-- Contenido principal -->
+    <div class="container">
+        <div class="header-actions">
+            <h2>Usuarios</h2>
+            <button class="btn-add" onclick="openModal()">Agregar <span>+</span></button>
+        </div>
+        
+        <!-- Campo de búsqueda con icono de lupa -->
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Buscar Usuario">
+        </div>
+        
+        <!-- Tabla de usuarios -->
+        <div class="table-container">
+  <table>
+        <thead>
+            <tr>
+                <th>Nro</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>DNI</th>
+                <th>Telefono</th>
+                <th>Correo</th>
+                <th>Fecha de Nacimiento</th>
+                <th>Decada</th>
+                <th>Tipo</th>
+                <th>Rol</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+                <tr th:each="usuario, iterStat : ${usuarios}">
+                    <td th:text="${iterStat.index + 1}">1</td>
+                    <td th:text="${usuario.nombre != null ? usuario.nombre : 'Sin Nombre'}">Nombre</td>
+                    <td th:text="${usuario.apellido != null ? usuario.apellido : 'Sin Apellido'}">Apellido</td>
+                    <td th:text="${usuario.dni != null ? usuario.dni : 'Sin DNI'}">DNI</td>
+                    <td th:text="${usuario.telefono != null ? usuario.telefono : 'Sin Telefono'}">Telefono</td>
+                    <td th:text="${usuario.email != null ? usuario.email : 'Sin Correo'}">Correo</td>
+                    <td th:text="${usuario.fechaNacimiento != null ? usuario.fechaNacimiento : 'Sin Fecha de Nacimiento'}">Fecha de Nacimiento</td>
+                    <td th:text="${usuario.decada != null ? usuario.decada.anioInicio + ' | ' + usuario.decada.getDecMes() : 'Sin Década'}">Década</td>
+                    <td th:text="${usuario.tipo != null ? usuario.tipo.tipoNombre : 'Sin Tipo'}">Tipo</td>
+                    <td th:text="${usuario.roles != null && !usuario.roles.isEmpty() ? usuario.roles[0].nombre : 'Sin Rol'}">Rol</td>
+                    <td class="actions">
+                    <form th:action="@{/eliminarUsuario/{id}(id=${usuario.usuId})}" method="post" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este usuario?');">
+                    <button class="btn-delete" type="submit">🗑️</button>
+                    </form>
+                          <a th:href="@{/editarUsuario/{id}(id=${usuario.usuId})}">✏️</a>
+                    </td>
+                </tr>
+        </tbody>
+    </table>
+        </div>
+        
+        <!-- Sistema de paginación -->
+        <div class="pagination">
+            <!-- Flecha para ir a la página anterior -->
+            <span class="pagination-arrow">
+                <i class="fas fa-chevron-left"></i>
+            </span>
+            <!-- Números de página -->
+            <span class="pagination-item active">1</span> <!-- Página actual -->
+            <span class="pagination-item">2</span>
+            <span class="pagination-item">3</span>
+            <!-- Puntos suspensivos para indicar páginas omitidas -->
+            <span class="pagination-dots">...</span>
+            <span class="pagination-item">8</span>
+            <span class="pagination-item">9</span>
+            <span class="pagination-item">10</span>
+            <!-- Flecha para ir a la página siguiente -->
+            <span class="pagination-arrow">
+                <i class="fas fa-chevron-right"></i>
+            </span>
+        </div>
+    </div>
+    
+    <!-- Modal de registro -->
+    <div class="modal" id="registroModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Registrar Nuevo Usuario</h2>
+            </div>
+            <form action="#" th:action="@{/registro}" th:object="${usuario}" method="post">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="nombre">Nombre:</label>
+                        <input type="text" id="nombre" th:field="*{nombre}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="apellido">Apellido:</label>
+                        <input type="text" id="apellido" th:field="*{apellido}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="dni">DNI:</label>
+                        <input type="text" id="dni" th:field="*{dni}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="telefono">Teléfono:</label>
+                        <input type="text" id="telefono" th:field="*{telefono}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fechaNacimiento">Fecha de Nacimiento:</label>
+                        <input type="date" id="fechaNacimiento" th:field="*{fechaNacimiento}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Correo Electrónico:</label>
+                        <input type="email" id="email" th:field="*{email}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contrasenia">Contraseña:</label>
+                        <input type="password" id="contrasenia" th:field="*{contrasenia}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="decada">Década y Mes:</label>
+                        <select id="decada" name="decId" required>
+                            <option th:each="decada : ${decadas}" 
+                                    th:value="${decada.decId}" 
+                                    th:text="${decada.decMes} + ' (' + ${decada.anioInicio} + ')'">
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tipo">Estado:</label>
+                        <select id="tipo" name="tipoId" required>
+                            <option th:each="tipo : ${tipos}" th:value="${tipo.tipoId}" th:text="${tipo.tipoNombre}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="roles">Rol:</label>
+                        <select id="roles" th:field="*{roles}" required>
+                            <option th:each="rol : ${roles}" th:value="${rol.id}" th:text="${rol.nombre}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn-primary" onclick="submitForm()">Añadir</button>
+                    <button type="button" class="btn-secondary" onclick="closeModal()">Anular</button>
+                </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openModal() {
+            document.getElementById('registroModal').style.display = 'block';
+        }
+        
+        function closeModal() {
+            document.getElementById('registroModal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<!-- Declaración del tipo de documento HTML5 -->
+<html lang="es">
+<!-- Idioma principal del documento: español -->
+<head>
+    <head th:replace="~{componentes/invitado/head :: head}"></head>
+    <link rel="stylesheet" th:href="@{/css/invitado/styleNoticias.css}">
+    <link rel="stylesheet" th:href="@{/css/invitado/stylePartidos.css}">
+    <link rel="stylesheet" th:href="@{/css/invitado/styleJugadores.css}">
+    <link rel="stylesheet" th:href="@{/css/invitado/styleHeader.css}">
+    <!-- Enlace a la hoja de estilos CSS -->
+</head>
+<body>
+  <!-- Cuerpo del documento HTML -->
+<header th:replace="~{componentes/invitado/header :: header}"></header>
+  <!-- Cabecera del sitio -->
+
+<!-- Contenido principal de la página -->
+<main>
+  <!-- Mensaje si no hay jugadores -->
+  <th:block th:if="${#maps.isEmpty(jugadoresPorGrupo)}">
+    <p style="text-align: center; font-size: 1.2rem; padding: 20px;">
+      No hay jugadores destacados disponibles por el momento.
+    </p>
+  </th:block>
+
+  <!-- Mostrar grupos si existen -->
+  <th:block th:each="grupo : ${jugadoresPorGrupo}">
+    <section>
+      <h2 th:text="${grupo.key}">Título</h2>
+      <div class="group">
+        <div class="player-grid">
+          <th:block th:each="jugador : ${grupo.value}">
+            <div class="player-card">
+              <img th:src="@{/imagenes/invitado/jugadores/messi.png}">
+              <hr>
+              <p><strong th:text="${jugador.jugNombre}">Nombre</strong></p>
+              <p><strong th:text="${jugador.equipo.equNombre}">Equipo</strong></p>
+              <p class="position">Posición</p>
+            </div>
+          </th:block>
+        </div>
+      </div>
+    </section>
+  </th:block>
+</main>
+
+    <!-- PIE DE PÁGINA: Dividido en tres secciones -->
+    <footer th:replace="~{componentes/miembroMesa/footer :: footer}"></footer>
+
+</body>
+</html>
+
+

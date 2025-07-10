@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <head th:replace="~{componentes/invitado/head :: head}"></head>
+    <!-- Importamos Font Awesome para los iconos de redes sociales -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/invitado/stylePartidos.css}">
+    <link rel="stylesheet" th:href="@{/css/invitado/styleNoticias.css}">
+    <link rel="stylesheet" th:href="@{/css/invitado/styleHeader.css}">
+</head>
+<body>
+    <!-- ENCABEZADO: Contiene el logo, título y navegación -->
+    <header th:replace="~{componentes/invitado/header :: header}"></header>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main>
+        <!-- Calendario semanal para seleccionar fecha -->
+        <div class="calendar">
+            <th:block th:each="fecha : ${partidosPorFecha.keySet()}">
+                <a style="text-decoration: none;" th:href="@{/partidoInvitados(fecha=${fecha})}">
+                    <div class="day" th:classappend="${fecha == fechaSeleccionada} ? 'active' : ''">
+                        <h2 class="nombre-mes" style="color: rgb(2, 143, 2);" th:switch="${fecha.month.name()}">
+                            <span th:case="'JANUARY'">Ene</span>
+                            <span th:case="'FEBRUARY'">Feb</span>
+                            <span th:case="'MARCH'">Mar</span>
+                            <span th:case="'APRIL'">Abr</span>
+                            <span th:case="'MAY'">May</span>
+                            <span th:case="'JUNE'">Jun</span>
+                            <span th:case="'JULY'">Jul</span>
+                            <span th:case="'AUGUST'">Agos</span>
+                            <span th:case="'SEPTEMBER'">Sep</span>
+                            <span th:case="'OCTOBER'">Oct</span>
+                            <span th:case="'NOVEMBER'">Nov</span>
+                            <span th:case="'DECEMBER'">Dic</span>
+                        </h2>
+                        <!-- Día del mes -->
+                        <div class="day-number" th:text="${fecha.dayOfMonth}">01</div>
+                        <!-- Nombre del día -->
+                        <div class="day-name" th:switch="${fecha.dayOfWeek.name()}">
+                            <span th:case="'MONDAY'">lun</span>
+                            <span th:case="'TUESDAY'">mar</span>
+                            <span th:case="'WEDNESDAY'">mié</span>
+                            <span th:case="'THURSDAY'">jue</span>
+                            <span th:case="'FRIDAY'">vie</span>
+                            <span th:case="'SATURDAY'">sáb</span>
+                            <span th:case="'SUNDAY'">dom</span>
+                        </div>
+
+                    </div>
+                </a>
+            </th:block>
+        </div>
+
+        <div class="match-group">
+            <th:block th:if="${#lists.isEmpty(partidos)}">
+                <p style="text-align: center; font-size: 1.4rem; padding: 20px; color: gray; font-style: italic;">No hay partidos programados por el momento</p>
+            </th:block>
+
+            <th:block th:each="partido : ${partidos}">
+                <div class="match"> 
+                    <div class="team">
+                        <div class="team-name" th:text="${partido.equipoLocal.equNombre}">Local</div>
+                        <img th:src="@{/imagenes/administrador/imgLogoEquipos/{img}(img=${partido.equipoLocal.equLogo})}" class="team-logo">
+                        <div class="score-container">-</div>
+                    </div>
+
+                    <div class="vs" style="text-align: center;">VS
+                        <h6 th:text="${partido.parHora}">Hora</h6>
+                    </div>
+
+                    <div class="team">
+                        <div class="team-name" th:text="${partido.equipoVisitante.equNombre}">Visitante</div>
+                        <img th:src="@{/imagenes/administrador/imgLogoEquipos/{img}(img=${partido.equipoVisitante.equLogo})}" class="team-logo">
+                        <div class="score-container">-</div>
+                    </div>
+                </div>
+            </th:block>
+        </div>
+
+    </main>
+
+    <!-- PIE DE PÁGINA: Dividido en tres secciones -->
+    <footer th:replace="~{componentes/miembroMesa/footer :: footer}"></footer>
+</body>
+</html>
