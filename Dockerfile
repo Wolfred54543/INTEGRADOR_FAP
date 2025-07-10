@@ -3,7 +3,7 @@ FROM openjdk:17-slim
 VOLUME /tmp
 
 RUN apt-get update && apt-get install -y curl && \
-    curl -L -o app.jar https://github.com/Wolfred54543/INTEGRADOR_FAP/releases/download/v1.0.0/integrador-0.0.1-SNAPSHOT.jar && \
+    curl -L -o app.jar https://github.com/Wolfred54543/INTEGRADOR_FAP/releases/download/v0.0.1/integrador-0.0.1-SNAPSHOT.jar && \
     apt-get clean
 
 EXPOSE 8080
