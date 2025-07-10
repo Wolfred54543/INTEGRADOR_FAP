@@ -25,7 +25,7 @@ public class InvitadoPartidoController {
             Model model) {
 
         List<Partido> todosPartidos = partidoService.listarPartidos();
-
+        
         // Agrupación por fecha (solo fechas con partidos registrados)
         Map<LocalDate, List<Partido>> partidosPorFecha = todosPartidos.stream()
                 .filter(p -> p.getParFecha() != null)

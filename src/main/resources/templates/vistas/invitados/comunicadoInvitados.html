@@ -10,6 +10,7 @@
 <body>
 
     <header th:replace="~{componentes/invitado/header :: header}"></header>
+
     <div class="page-header">
         <h1 class="page-title">Comunicados Oficiales</h1>
         <p class="page-subtitle">Información oficial y declaraciones del club</p>
@@ -17,6 +18,15 @@
 
     <main class="container">
     <div class="main-content">
+
+        <!-- Mensaje cuando no hay comunicados -->
+        <div th:if="${#lists.isEmpty(comunicados)}" class="no-comunicados">
+            <p style="text-align: center; font-size: 1.1rem; padding: 20px; color: #777;">
+                No se han publicado comunicados por el momento.
+            </p>
+        </div>
+        
+        <!-- Lista de comunicados -->
         <article class="comunicado-card" th:each="comunicado : ${comunicados}">
             <div class="comunicado-header">
                 <span class="comunicado-type" th:text="${comunicado.comTipo}">Oficial</span>

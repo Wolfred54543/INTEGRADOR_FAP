@@ -1,8 +1,12 @@
 package fap_sports.integrador.services;
 
 import fap_sports.integrador.models.Partido;
+import fap_sports.integrador.models.Campeonato;
+import fap_sports.integrador.models.CampeonatoEquipo;
 import fap_sports.integrador.models.Equipo;
 import fap_sports.integrador.repositories.PartidoRepository;
+import fap_sports.integrador.repositories.CampeonatoEquipoRepository;
+import fap_sports.integrador.repositories.CampeonatoRepository;
 import fap_sports.integrador.repositories.EquipoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,24 +24,40 @@ public class PartidoService {
     @Autowired
     private EquipoRepository equipoRepository;
 
-   
-    // SORTEO DE PARTIDOS
-    public void realizarSorteo() {
-        List<Equipo> equipos = equipoRepository.findAll();
+    @Autowired
+    private CampeonatoRepository campeonatoRepository;
 
-        if (equipos.size() != 12) {
-            throw new IllegalArgumentException("Se requieren exactamente 12 equipos.");
+    @Autowired
+    private CampeonatoEquipoRepository campeonatoEquipoRepository;
+   
+    public void realizarSorteoPorCampeonato(Long campeonatoId, List<Equipo> equipos) {
+        if (equipos == null || equipos.size() < 2 || equipos.size() % 2 != 0) {
+            throw new IllegalArgumentException("Debes seleccionar una cantidad par de equipos (mínimo 2).");
         }
 
+        Campeonato campeonato = campeonatoRepository.findById(campeonatoId)
+            .orElseThrow(() -> new RuntimeException("Campeonato no encontrado."));
+
+
+         // Guardar equipos asignados al campeonato
+        for (Equipo equipo : equipos) {
+            CampeonatoEquipo ce = new CampeonatoEquipo();
+            ce.setCampeonato(campeonato);
+            ce.setEquipo(equipo);
+            campeonatoEquipoRepository.save(ce);
+        }
+   
         Collections.shuffle(equipos);
 
         for (int i = 0; i < equipos.size(); i += 2) {
             Partido partido = new Partido();
             partido.setEquipoLocal(equipos.get(i));
             partido.setEquipoVisitante(equipos.get(i + 1));
+            partido.setCampeonato(campeonato); // si tienes la relación
             partidoRepository.save(partido);
         }
     }
+
 
     // Crear partido
     public Partido crearPartido(Partido partido) {
@@ -73,4 +93,9 @@ public class PartidoService {
     public List<Partido> obtenerUltimosPartidos() {
         return partidoRepository.findTop3ByOrderByParFechaDescParHoraDesc();
     }
+
+    public List<Partido> obtenerPartidosPorCampeonatoId(Long campeonatoId) {
+        return partidoRepository.findByCampeonatoCamId(campeonatoId);
+    }
+
 }

@@ -81,4 +81,21 @@ public class EquipoService {
         Rol rolDelegado = rolRepository.findByNombre(rolNombre);
         return rolDelegado != null ? rolDelegado.getUsuarios() : new ArrayList<>();
     }
+
+    // Obtener equipos que pertenecen a una década específica
+    public List<Equipo> obtenerEquiposPorDecada(Long decadaId) {
+        return equipoRepository.findByDecada_DecId(decadaId);
+    }
+    
+    public List<Equipo> obtenerEquiposPorAnioDecada(Long decadaId) {
+        Decada decada = decadaRepository.findById(decadaId)
+            .orElseThrow(() -> new RuntimeException("Década no encontrada"));
+        
+        return equipoRepository.findByAnioInicio(decada.getAnioInicio());
+    }
+
+    public List<Equipo> obtenerEquiposPorIds(List<Long> ids) {
+        return equipoRepository.findAllById(ids);
+    }
+
 }

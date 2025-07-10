@@ -104,15 +104,17 @@ public class JugadorController {
    // Vista de jugadores para los invitados
    @GetMapping("/jugadores")
    public String mostrarJugadoresAgrupados(Model model) {
-      List<Jugador> jugadores = jugadorService.getAllJugadores();
+      List<Jugador> jugadores = jugadorService.getAllJugadores()
+            .stream()
+            .filter(j -> j.getDecada() != null && j.getEquipo() != null)
+            .collect(Collectors.toList());
 
       // Agrupar jugadores por "Década Año de Inicio y Mes"
       Map<String, List<Jugador>> jugadoresPorGrupo = jugadores.stream()
-         .filter(j -> j.getDecada() != null)
          .collect(Collectors.groupingBy(j -> {
                Decada d = j.getDecada();
                return "Década " + d.getAnioInicio() + " " + d.getDecMes();
-         }));
+      }));
 
       // Ordenar el mapa por año y luego lo hace por mes
       Map<String, List<Jugador>> jugadoresOrdenados = jugadoresPorGrupo.entrySet().stream()

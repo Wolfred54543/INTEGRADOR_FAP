@@ -52,6 +52,9 @@
         </div>
 
         <div class="match-group">
+            <th:block th:if="${#lists.isEmpty(partidos)}">
+                <p style="text-align: center; font-size: 1.4rem; padding: 20px; color: gray; font-style: italic;">No hay partidos programados por el momento</p>
+            </th:block>
 
             <th:block th:each="partido : ${partidos}">
                 <div class="match"> 
@@ -72,7 +75,8 @@
                     </div>
                 </div>
             </th:block>
-        </div> 
+        </div>
+
     </main>
 
     <!-- PIE DE PÁGINA: Dividido en tres secciones -->

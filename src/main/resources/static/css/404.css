@@ -1,14 +1,3 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <!-- Configuración básica del documento -->
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <!-- Título de la página de error -->
-  <title>Error 404 - Página no encontrada</title>
-  <!-- Enlace a la hoja de estilos específica para la página 404 -->
-  <link rel="stylesheet" href="styles404.css" />
-  <style>
         /*
     * Hoja de estilos para la página de error 404
     * Diseño adaptativo y centrado en la experiencia de usuario
@@ -23,7 +12,7 @@
 
     /* Estilos generales del cuerpo del documento */
     body {
-    font-family: 'Segoe UI', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; /* Fuente predeterminada para toda la página */
     background-color: white;
     color: #111827;
     min-height: 100vh; /* Ocupa al menos toda la altura de la pantalla */
@@ -161,37 +150,3 @@
         order: -1; /* Coloca la imagen antes del texto */
     }
     }
-  </style>
-</head>
-<body>
-  <!-- Contenedor principal de la página de error -->
-  <main class="container">
-    <!-- Sección de texto con información del error -->
-    <section class="text">
-      <!-- Código de error -->
-      <p class="error-code">404 error</p>
-      <!-- Título principal -->
-      <h1>Página no encontrada</h1>
-      <!-- Mensaje explicativo -->
-      <p class="message">
-        Lo sentimos, la página que busca no existe. Aquí tiene algunos enlaces útiles:
-      </p>
-      <!-- Botones de acción -->
-      <div class="buttons">
-        <!-- Botón para volver atrás -->
-        <button onclick="history.back()" class="btn btn-outline">← Atrás</button>
-        <!-- Botón para ir al inicio -->
-        <a href="/" class="btn btn-primary">Página de Inicio</a>
-      </div>
-    </section>
-    
-    <!-- Sección de imagen ilustrativa -->
-    <section class="image">
-      <!-- Imagen representativa del error 404 -->
-      <img src="404 Fútbol.png" alt="Pelota azul en medio de la cancha" />
-      <!-- Elemento decorativo -->
-      <div class="decoración"></div>
-    </section>
-  </main>
-</body>
-</html>

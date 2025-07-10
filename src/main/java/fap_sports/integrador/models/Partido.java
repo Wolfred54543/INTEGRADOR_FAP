@@ -28,6 +28,11 @@ public class Partido {
     @JoinColumn(name = "equipo_visitante_id")
     private Equipo equipoVisitante;
 
+    @ManyToOne
+    @JoinColumn(name = "cam_id")
+    private Campeonato campeonato;
+
+
     // Métodos get y set
     public Long getParId() {
         return parId;
@@ -69,5 +74,11 @@ public class Partido {
         this.parHora = parHora;
     }
 
-    
+    public Campeonato getCampeonato() {
+        return campeonato;
+    }
+
+    public void setCampeonato(Campeonato campeonato) {
+        this.campeonato = campeonato;
+    }
 }

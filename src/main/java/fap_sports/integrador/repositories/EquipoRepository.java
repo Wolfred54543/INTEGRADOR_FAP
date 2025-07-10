@@ -16,4 +16,7 @@ public interface EquipoRepository extends JpaRepository<Equipo, Long> {
     // Traer equipos por el parametro -> anioInicio
     @Query("SELECT e FROM Equipo e WHERE e.decada.anioInicio = :anio")
     List<Equipo> findByAnioInicio(@Param("anio") int anio);
+
+    // Método para obtener equipos por ID de década
+    List<Equipo> findByDecada_DecId(Long decadaId);
 }

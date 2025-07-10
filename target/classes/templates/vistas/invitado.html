@@ -59,7 +59,7 @@
                     </th:block>
                 </div>
             </div>
-            <p th:if="${#lists.isEmpty(ultimosPartidos)}">No se encontraron partidos recientes.</p>
+            <p th:if="${#lists.isEmpty(ultimosPartidos)}" style="text-align: start; font-style: italic; color: gray;">No se encontraron partidos recientes.</p>
         
     </section>
 </div>
@@ -67,8 +67,12 @@
 <div>
     <h2 style="padding: 20px;">Noticias Recientes</h2>
     <main class="noticias-main">
+        <!-- NOTICIAS PRINCIPALES -->
         <section class="noticia-principal">
-            <th:block th:each="noticia : ${noticiasPrincipales}">
+            <th:block th:if="${#lists.isEmpty(noticiasPrincipales)}">
+                <p style="text-align: center; font-style: italic; color: gray;">No hay noticias principales por el momento.</p>
+            </th:block>
+            <th:block th:unless="${#lists.isEmpty(noticiasPrincipales)}" th:each="noticia : ${noticiasPrincipales}">
                 <div class="noticia-imagen">
                     <img th:src="@{/imagenes/administrador/imgNoticias/{img}(img=${noticia.notImagen})}" alt="Imagen noticia principal">
                 </div>
@@ -76,20 +80,24 @@
                     <p class="autor-fecha" th:text="${noticia.notAutor != null ? noticia.notAutor : 'Anónimo'}"></p>
                     <h2>
                         <a th:href="@{/postNoticia/{id}(id=${noticia.notId})}" style="text-decoration: none; color: black;" 
-                        th:text="${noticia.notTitulo}">Título</a>
+                           th:text="${noticia.notTitulo}">Título</a>
                     </h2>
                     <b th:text="${noticia.notSubtitulo}">Subtítulo</b><br><br>
                     <p class="quote" th:text="${#strings.abbreviate(noticia.notDescripcion, 300)}">Descripción o contenido de la noticia</p><br>
                     <p class="autor-fecha"
-                    th:text="${noticia.notFechaCreacion != null ? #dates.format(noticia.notFechaCreacion, 'dd MMMM yyyy') : 'Sin fecha'}">
+                       th:text="${noticia.notFechaCreacion != null ? #dates.format(noticia.notFechaCreacion, 'dd MMMM yyyy') : 'Sin fecha'}">
                     </p>
                 </div>
                 <div class="divider"></div>
             </th:block>
         </section>
 
+        <!-- NOTICIAS SECUNDARIAS -->
         <aside class="noticias-secundarias">
-            <th:block th:each="noticia : ${noticiasSecundarias}">
+            <th:block th:if="${#lists.isEmpty(noticiasSecundarias)}">
+                <p style="text-align: center; font-style: italic; color: gray;">No hay noticias secundarias por el momento.</p>
+            </th:block>
+            <th:block th:unless="${#lists.isEmpty(noticiasSecundarias)}" th:each="noticia : ${noticiasSecundarias}">
                 <div class="noticia-secundaria">
                     <img th:src="@{/imagenes/administrador/imgNoticias/{img}(img=${noticia.notImagen})}" alt="Imagen noticia secundaria">
                     <div>
@@ -97,11 +105,11 @@
                             <span th:text="${noticia.notAutor != null && noticia.notAutor != '' ? noticia.notAutor : 'Anónimo'}"></span>
                         </p>
                         <p class="autor-fecha"
-                        th:text="${noticia.notFechaCreacion != null ? #dates.format(noticia.notFechaCreacion, 'dd MMMM yyyy') : 'Sin fecha'}">
+                           th:text="${noticia.notFechaCreacion != null ? #dates.format(noticia.notFechaCreacion, 'dd MMMM yyyy') : 'Sin fecha'}">
                         </p>
                         <h3>
                             <a th:href="@{/postNoticia/{id}(id=${noticia.notId})}" style="text-decoration: none; color: black;"
-                            th:text="${noticia.notTitulo}">Título</a>
+                               th:text="${noticia.notTitulo}">Título</a>
                         </h3>
                         <p th:text="${#strings.abbreviate(noticia.notSubtitulo, 70)}">Subtítulo</p>
                     </div>
@@ -111,15 +119,22 @@
     </main>
 </div>
 
+
 <div>
     <h2 style="padding: 20px;">Jugadores Destacados</h2>
     <main>
         <section>
             <div class="group">
-                <div class="player-grid">
+                <!-- Si la lista está vacía, mostrar mensaje -->
+                <p th:if="${#lists.isEmpty(jugadores)}" style="text-align: center; font-style: italic; color: gray;">
+                    No hay jugadores destacados por el momento.
+                </p>
+
+                <!-- Si hay jugadores, mostrarlos -->
+                <div class="player-grid" th:if="${!#lists.isEmpty(jugadores)}">
                     <th:block th:each="jugador : ${jugadores}">
                         <div class="player-card">
-                            <img th:src="@{/imagenes/invitado/jugadores/messi.png}">
+                            <img th:src="@{/imagenes/invitado/jugadores/messi.png}" alt="Jugador destacado">
                             <hr>
                             <p><strong th:text="${jugador.jugNombre}">Nombre</strong></p>
                             <p><strong th:text="${jugador.equipo.equNombre}">Equipo</strong></p>

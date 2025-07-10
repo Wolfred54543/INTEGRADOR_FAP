@@ -1,0 +1,29 @@
+<body>
+    <h2 th:text="'Asignar Equipos a: ' + ${campeonato.camNombre}"></h2>
+
+    <div th:if="${#lists.isEmpty(equiposAsignados)}">
+        <!-- Formulario solo si aún no hay equipos asignados -->
+        <form th:action="@{/partidos/sorteo}" method="post">
+            <input type="hidden" name="campeonatoId" th:value="${campeonato.camId}" />
+            
+            <div th:each="i : ${indices}">
+                <label th:for="'equipo' + ${i}">Equipo [[${i + 1}]]:</label>
+                <select name="equiposSeleccionados" required>
+                    <option value="" disabled selected>Selecciona un equipo</option>
+                    <option th:each="equipo : ${equiposDisponibles}"
+                            th:value="${equipo.equId}"
+                            th:text="${equipo.equNombre}">
+                    </option>
+                </select>
+            </div>
+
+            <button type="submit">Generar Fixture</button>
+            <a th:href="@{/campeonatos}">Volver al inicio</a>
+        </form>
+    </div>
+
+    <div th:unless="${#lists.isEmpty(equiposAsignados)}">
+        <p>⚠️ Ya se generó el fixture para este campeonato. No puedes volver a asignar equipos.</p>
+        <a th:href="@{/campeonatos}">Volver al listado de campeonatos</a>
+    </div>
+</body>
