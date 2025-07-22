@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <head th:replace="~{componentes/invitado/head :: head}"></head>
+    <!-- Importamos Font Awesome para los iconos de redes sociales -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/miembroMesa/styleRegistrarResultados.css}">
+    <link rel="stylesheet" th:href="@{/css/invitado/styleModalVideo.css}">
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+</head>
+
+<body>
+    <!-- ENCABEZADO -->
+    <header th:replace="~{componentes/miembroMesa/header :: header}"></header>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main>
+        <!-- Título -->
+        <h1 class="titulo-pagina">Registro de Incidencias</h1>
+
+        <!-- Calendario -->
+        <div class="calendar">
+            <th:block th:if="${partidosPorFecha != null}">
+                <th:block th:each="fecha : ${fechasOrdenadas}">
+                    <a style="text-decoration: none;" th:href="@{/registrarIncidencias(fecha=${fecha})}">
+                        <div class="day" th:classappend="${fecha == fechaSeleccionada} ? 'active' : ''">
+                            <h2 class="nombre-mes" style="color: rgb(2, 143, 2);" th:switch="${fecha.month.name()}">
+                                <span th:case="'JANUARY'">Ene</span>
+                                <span th:case="'FEBRUARY'">Feb</span>
+                                <span th:case="'MARCH'">Mar</span>
+                                <span th:case="'APRIL'">Abr</span>
+                                <span th:case="'MAY'">May</span>
+                                <span th:case="'JUNE'">Jun</span>
+                                <span th:case="'JULY'">Jul</span>
+                                <span th:case="'AUGUST'">Agos</span>
+                                <span th:case="'SEPTEMBER'">Sep</span>
+                                <span th:case="'OCTOBER'">Oct</span>
+                                <span th:case="'NOVEMBER'">Nov</span>
+                                <span th:case="'DECEMBER'">Dic</span>
+                            </h2>
+                            <div class="day-number" th:text="${fecha.dayOfMonth}">01</div>
+                            <div class="day-name" th:switch="${fecha.dayOfWeek.name()}">
+                                <span th:case="'MONDAY'">lun</span>
+                                <span th:case="'TUESDAY'">mar</span>
+                                <span th:case="'WEDNESDAY'">mié</span>
+                                <span th:case="'THURSDAY'">jue</span>
+                                <span th:case="'FRIDAY'">vie</span>
+                                <span th:case="'SATURDAY'">sáb</span>
+                                <span th:case="'SUNDAY'">dom</span>
+                            </div>
+                        </div>
+                    </a>
+                </th:block>
+            </th:block>
+        </div>
+
+        <!-- Lista de Partidos -->
+        <div class="match-group">
+            <th:block th:if="${#lists.isEmpty(partidos)}">
+                <p style="text-align: center; font-size: 1.4rem; padding: 20px; color: gray; font-style: italic;">
+                    No hay partidos programados por el momento
+                </p>
+            </th:block>
+
+            <th:block th:each="partido : ${partidos}">
+                <div class="match">
+                    <div class="team">
+                        <div class="team-name" th:text="${partido.equipoLocal.equNombre}">Local</div>
+                        <img th:src="@{/imagenes/administrador/imgLogoEquipos/{img}(img=${partido.equipoLocal.equLogo})}" alt="Logo local" class="team-logo">
+                        <div class="score-container">
+                            <div class="score-label">Puntaje:</div>
+                            <div th:text="${partido.parPuntajeLocal != null} ? ${partido.parPuntajeLocal} : '-'">-</div>
+                        </div>
+                    </div>
+
+                    <div class="vs" style="text-align: center;font-size: 14px; color: gray;">
+                        VS
+                        <h4 th:text="${partido.parHora}" style="color: green;">Hora</h4>
+                        <span th:text="${partido.parEstado}" style="color: black;">Estado</span>
+                    </div>
+
+                    <div class="team">
+                        <div class="team-name" th:text="${partido.equipoVisitante.equNombre}">Visitante</div>
+                        <img th:src="@{/imagenes/administrador/imgLogoEquipos/{img}(img=${partido.equipoVisitante.equLogo})}" alt="Logo visitante" class="team-logo">
+                        <div class="score-container">
+                            <div class="score-label">Puntaje:</div>
+                            <div th:text="${partido.parPuntajeVisitante != null} ? ${partido.parPuntajeVisitante} : '-'">-</div>
+                        </div>
+                    </div>
+
+                    <!-- Botón para registrar incidencias -->
+                    <div class="submit-container">
+                        <a th:href="@{/guardarIncidencias(partidoId=${partido.parId})}" class="add-btn" style="text-decoration: none; padding: 7px; font-size: 14px;">Registrar Incidencias</a>
+                    </div>
+                </div>
+            </th:block>
+        </div>
+    </main>
+
+    <!-- Modal de Video -->
+    <div id="videoModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <h2>Video Guía Contextual</h2>
+            <div class="video-container">
+                <video id="video" width="560" height="315" controls autoplay muted>
+                    <source th:src="@{/videos/MIEMBRO.mp4}" type="video/mp4">
+                    Tu navegador no soporta el video.
+                </video>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var modal = document.getElementById("videoModal");
+        var video = document.getElementById("video");
+        var span = document.getElementById("closeModal");
+
+        function openModal() {
+            modal.style.display = "block";
+        }
+
+        span.onclick = function () {
+            modal.style.display = "none";
+            video.pause();
+            video.currentTime = 0;
+        }
+
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+                video.pause();
+                video.currentTime = 0;
+            }
+        }
+    </script>
+
+    <!-- Botón para abrir el modal -->
+    <button id="openModal" onclick="openModal()" class="fixed-button">Ver Guía</button>
+
+    <!-- PIE DE PÁGINA -->
+    <footer th:replace="~{componentes/miembroMesa/footer :: footer}"></footer>
+</body>
+</html>

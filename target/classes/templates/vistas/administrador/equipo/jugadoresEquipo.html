@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:replace="~{componentes/administrador/head :: head}"></head>
+    <link rel="stylesheet" th:href="@{/css/administrador/jugadoresEquipo.css}">
+</head>
+<body>
+    <header th:replace="~{componentes/administrador/header :: header}"></header>
+
+    <div class="container">
+        <!-- Encabezado del equipo -->
+        <div class="team-header">
+            <img th:src="@{/imagenes/administrador/imgLogoEquipos/{nombreLogo}(nombreLogo=${equipo.equLogo})}" alt="Logo del Equipo" class="img_logo_equipo"/>
+            <h1 th:text="${equipo.equNombre}">Nombre del Equipo</h1>
+            <p th:text="'Década: ' + ${equipo.decada.anioInicio} + ' - ' + ${equipo.decada.decMes}">Década</p>
+            <p th:text="'Total de Jugadores: ' + ${jugadores.size()}">Total de Jugadores</p>
+        </div>
+
+        <!-- Botón para regresar -->
+        <a href="/formularioEquipos" class="back-btn">← Volver a Jugadores</a>
+
+        <!-- Botones para cambiar vista -->
+        <div class="view-toggle">
+            <button class="toggle-btn active" onclick="showTableView()">📋 Ver Plantilla</button>
+            <button class="toggle-btn" onclick="showFormationView()">⚽ Ver Formación</button>
+        </div>
+
+        <!-- Vista de Tabla -->
+        <div id="tableView" class="table-view">
+            <h3>Plantilla de jugadores</h3>
+            <div th:if="${jugadores.empty}" class="no-players">
+                <h3>No hay jugadores registrados en este equipo</h3>
+                <p>Los jugadores aparecerán aquí una vez que sean asignados al equipo.</p>
+            </div>
+            
+            <table th:if="${!jugadores.empty}" class="players-table">
+                <thead>
+                    <tr>
+                        <th>Nro</th>
+                        <th>Nombre Completo</th>
+                        <th>DNI</th>
+                        <th>Década</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="jugador, iterStat : ${jugadores}">
+                        <td th:text="${iterStat.index + 1}">1</td>
+                        <td th:text="${jugador.jugNombre + ' ' + jugador.jugApellido}">Nombre Completo</td>
+                        <td th:text="${jugador.jugDni}">DNI</td>
+                        <td th:text="${jugador.decada.anioInicio + ' - ' + jugador.decada.decMes}">Década</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Vista de Formación -->
+        <div id="formationView" class="formation-view">
+            <div th:if="${jugadores.empty}" class="no-players">
+                <h3>No hay jugadores para mostrar en formación</h3>
+                <p>Necesitas al menos algunos jugadores registrados para ver la formación.</p>
+            </div>
+            <h3>Formacion del equipo</h3>
+            <div th:if="${!jugadores.empty}" class="football-field">
+                <!-- Líneas del campo -->
+                <div class="field-lines">
+                    <div class="center-line"></div>
+                    <div class="center-circle"></div>
+                    <div class="penalty-area left"></div>
+                    <div class="penalty-area right"></div>
+                </div>
+                
+                <!-- Jugadores en posiciones (máximo 11) -->
+                <div th:each="jugador, iterStat : ${jugadores}" 
+                     th:if="${iterStat.index < 11}"
+                     th:class="'player-position pos-' + ${iterStat.index == 0 ? 'gk' : 
+                                                        (iterStat.index <= 4 ? 'def' + iterStat.index : 
+                                                        (iterStat.index <= 8 ? 'mid' + (iterStat.index - 4) : 
+                                                        'for' + (iterStat.index - 8)))}">
+                    <div th:text="${iterStat.index + 1}">1</div>
+                    <div class="player-name" th:text="${jugador.jugNombre + ' ' + jugador.jugApellido}">Nombre</div>
+                </div>
+                
+                <!-- Mensaje si hay más de 11 jugadores -->
+                <div th:if="${jugadores.size() > 11}" style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 10px; border-radius: 5px;">
+                    <p th:text="'Mostrando 11 de ' + ${jugadores.size()} + ' jugadores en formación 4-4-2'">Información adicional</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTableView() {
+            document.getElementById('tableView').style.display = 'block';
+            document.getElementById('formationView').style.display = 'none';
+            
+            // Actualizar botones
+            document.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+        
+        function showFormationView() {
+            document.getElementById('tableView').style.display = 'none';
+            document.getElementById('formationView').style.display = 'block';
+            
+            // Actualizar botones
+            document.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

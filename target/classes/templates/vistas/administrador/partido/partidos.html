@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:replace="~{componentes/administrador/head :: head}"></head>
+</head>
+<body>
+<header th:replace="~{componentes/administrador/header :: header}"></header>
+
+<div class="container">
+    <div class="header-actions">
+        <h2>Partidos</h2>
+    </div>
+
+    <div class="search-container">
+        <input type="text" class="search-input" placeholder="Buscar Partido">
+    </div>
+
+    <!-- Si hay solo un campeonato -->
+<div th:if="${soloUnCampeonato}">
+    <h3 th:text="${campeonato.camNombre}"></h3>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nro</th>
+                    <th>Equipo Local</th>
+                    <th>Equipo Visitante</th>
+                    <th>Delegado (Equipo Vistante)</th>
+                    <th>Delegado (Equipo Local)</th>
+                    <th>Fecha</th>
+                    <th>Hora</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="partido, iterStat : ${partidos}">
+                    <td th:text="${iterStat.index + 1}"></td>
+                    <td th:text="${partido.equipoLocal.equNombre}"></td>
+                    <td th:text="${partido.equipoVisitante.equNombre}"></td>
+                    <td th:text="${partido.equipoLocal.delegado.nombre + ' ' + partido.equipoLocal.delegado.apellido}"></td>
+                    <td th:text="${partido.equipoVisitante.delegado.nombre + ' ' + partido.equipoVisitante.delegado.apellido}"></td>
+                    <td th:text="${partido.parFecha != null ? #temporals.format(partido.parFecha, 'dd/MM/yyyy') : 'Sin fecha'}"></td>
+                    <td th:text="${partido.parHora != null ? #temporals.format(partido.parHora, 'HH:mm') : 'Sin hora'}"></td>
+                    <td class="actions">
+                        <a th:href="@{/editarPartido/{id}(id=${partido.parId})}" style="text-decoration: none; color: green;">✏️ Asignar Fecha y Hora</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+    <!-- Si hay varios campeonatos -->
+    <div th:unless="${soloUnCampeonato}" th:each="entry : ${partidosPorCampeonato}">
+        <h3 th:text="${entry.key.camNombre}"></h3>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nro</th>
+                        <th>Equipo 1</th>
+                        <th>Equipo 2</th>
+                        <th>Delegado 1</th>
+                        <th>Delegado 2</th>
+                        <th>Fecha</th>
+                        <th>Hora</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="partido, iterStat : ${entry.value}">
+                        <td th:text="${iterStat.index + 1}"></td>
+                        <td th:text="${partido.equipoLocal.equNombre}"></td>
+                        <td th:text="${partido.equipoVisitante.equNombre}"></td>
+                        <td th:text="${partido.equipoLocal.delegado.nombre + ' ' + partido.equipoLocal.delegado.apellido}"></td>
+                        <td th:text="${partido.equipoVisitante.delegado.nombre + ' ' + partido.equipoVisitante.delegado.apellido}"></td>
+                        <td th:text="${partido.parFecha != null ? #temporals.format(partido.parFecha, 'dd/MM/yyyy') : 'Sin fecha'}"></td>
+                        <td th:text="${partido.parHora != null ? #temporals.format(partido.parHora, 'HH:mm') : 'Sin hora'}"></td>
+                        <td class="actions">
+                            <a th:href="@{/editarPartido/{id}(id=${partido.parId})}">✏️ Asignar Fecha y Hora</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="header-actions">
+        <a href="/campeonatos" class="btn-add" style="padding: 7px; font-size:14px;text-decoration: none;">Volver</a>
+    </div>
+</div>
+
+          <!-- Modal para el video de la página -->
+    <div id="videoModalAdmin" class="modalAdmin">
+        <div class="modal-contentAdmin">
+            <span class="closeAdmin" id="closeModalAdmin">&times;</span>
+            <h2>Video Guia</h2>
+            <div class="video-containerAdmin">
+                <video id="videoAdmin" width="560" height="315" controls autoplay muted>
+                    <source th:src="@{/videos/ADMIN.mp4}" type="video/mp4"> 
+                    Tu navegador no soporta el video.
+                </video>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Obtener el modal
+        var modal = document.getElementById("videoModalAdmin");
+
+        // Obtener el video
+        var video = document.getElementById("videoAdmin");
+
+        // Obtener el elemento <span> que cierra el modal
+        var span = document.getElementById("closeModalAdmin");
+
+        // Función para abrir el modal
+        function openModalAdmin() {
+            modal.style.display = "block";
+        }
+
+        // Cuando el usuario hace clic en <span> (x), cerrar el modal
+        span.onclick = function() {
+            modal.style.display = "none";
+            video.pause(); // Pausar el video al cerrar
+            video.currentTime = 0; // Reiniciar el video
+        }
+
+        // Cuando el usuario hace clic en cualquier parte fuera del modal, cerrarlo
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+                video.pause(); // Pausar el video al cerrar
+                video.currentTime = 0; // Reiniciar el video
+            }
+        }
+    </script>
+
+    <!-- Botón para abrir el modal -->
+    <button id="openModalAdmin" onclick="openModalAdmin()" class="fixed-buttonAdmin">Ver Guia</button>
+    
+</body>
+</html>

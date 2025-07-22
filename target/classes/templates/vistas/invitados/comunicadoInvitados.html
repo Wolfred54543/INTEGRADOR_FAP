@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comunicados Oficiales - Deportes FAP</title>
+    <link rel="stylesheet" th:href="@{/css/invitado/styleComunicados.css}">
+    <link rel="stylesheet" th:href="@{/css/invitado/stylePartidos.css}">
+    <link rel="stylesheet" th:href="@{/css/invitado/styleModalVideo.css}">
+    <head th:replace="~{componentes/invitado/head :: head}"></head>
+</head>
+<body>
+
+    <header th:replace="~{componentes/invitado/header :: header}"></header>
+
+    <div class="page-header">
+        <h1 class="page-title">Comunicados Oficiales</h1>
+        <p class="page-subtitle">Información oficial y declaraciones del club</p>
+    </div>
+
+    <main class="container">
+    <div class="main-content">
+
+        <!-- Mensaje cuando no hay comunicados -->
+        <div th:if="${#lists.isEmpty(comunicados)}" class="no-comunicados">
+            <p style="text-align: center; font-size: 1.1rem; padding: 20px; color: #777;">
+                No se han publicado comunicados por el momento.
+            </p>
+        </div>
+        
+        <!-- Lista de comunicados -->
+        <article class="comunicado-card" th:each="comunicado : ${comunicados}">
+            <div class="comunicado-header">
+                <span class="comunicado-type" th:text="${comunicado.comTipo}">Oficial</span>
+                <h2 class="comunicado-title" th:text="${comunicado.comTitulo}">Título</h2>
+                <div class="comunicado-meta">
+                    <div class="comunicado-date">
+                        <span>📅</span>
+                        <span th:text="${comunicado.comFechaPublicacion}">Fecha</span>
+                    </div>
+                </div>
+            </div>
+            <div class="comunicado-content">
+                <p class="comunicado-text" th:text="${comunicado.comContenido}">Contenido del comunicado...</p>
+                
+                <!-- Botón de descarga si existe documento -->
+                <div th:if="${comunicado.comDocumento != null}">
+                    <p>Documento adjunto:</p>
+                    <a style="text-decoration: none; color: green;" th:href="@{/documents/administrador/comunicados/{filename}(filename=${comunicado.comDocumento})}" 
+                    class="btn-descargar" 
+                    target="_blank"
+                    download>
+                    📎 <span th:text="${comunicado.comDocumento}">Documento</span>
+                    </a>
+                </div>
+            </div>
+        </article>
+    </div>
+
+
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Comunicados Recientes</h3>
+                <div class="comunicado-item">
+                    <div class="item-title">Convocatoria Asamblea General Ordinaria</div>
+                    <div class="item-date">22 Mayo 2025</div>
+                </div>
+                <div class="comunicado-item">
+                    <div class="item-title">Protocolo sanitario para eventos</div>
+                    <div class="item-date">20 Mayo 2025</div>
+                </div>
+                <div class="comunicado-item">
+                    <div class="item-title">Incorporación nuevo director técnico</div>
+                    <div class="item-date">18 Mayo 2025</div>
+                </div>
+                <div class="comunicado-item">
+                    <div class="item-title">Modificación reglamento interno</div>
+                    <div class="item-date">15 Mayo 2025</div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Archivo</h3>
+                <div class="comunicado-item">
+                    <div class="item-title">📢 Mayo 2025</div>
+                    <div class="item-date">8 comunicados</div>
+                </div>
+                <div class="comunicado-item">
+                    <div class="item-title">📋 Abril 2025</div>
+                    <div class="item-date">12 comunicados</div>
+                </div>
+                <div class="comunicado-item">
+                    <div class="item-title">⚖️ Marzo 2025</div>
+                    <div class="item-date">5 comunicados</div>
+                </div>
+                <div class="comunicado-item">
+                    <div class="item-title">🏆 Febrero 2025</div>
+                    <div class="item-date">3 comunicados</div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Contacto Oficial</h3>
+                <div class="comunicado-item">
+                    <div class="item-title">📧 comunicados@deportesfap.com</div>
+                </div>
+                <div class="comunicado-item">
+                    <div class="item-title">📞 +34 900 123 456</div>
+                </div>
+                <div class="comunicado-item">
+                    <div class="item-title">🏢 Oficinas Centrales</div>
+                    <div class="item-date">Lun-Vie 9:00-18:00</div>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+          <!-- Modal para el video de la página -->
+    <div id="videoModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <h2>Video Guia Contextual</h2>
+            <div class="video-container">
+                <video id="video" width="560" height="315" controls autoplay muted>
+                    <source th:src="@{/videos/INVITADO.mp4}" type="video/mp4"> 
+                    Tu navegador no soporta el video.
+                </video>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Obtener el modal
+        var modal = document.getElementById("videoModal");
+
+        // Obtener el video
+        var video = document.getElementById("video");
+
+        // Obtener el elemento <span> que cierra el modal
+        var span = document.getElementById("closeModal");
+
+        // Función para abrir el modal
+        function openModal() {
+            modal.style.display = "block";
+        }
+
+        // Cuando el usuario hace clic en <span> (x), cerrar el modal
+        span.onclick = function() {
+            modal.style.display = "none";
+            video.pause(); // Pausar el video al cerrar
+            video.currentTime = 0; // Reiniciar el video
+        }
+
+        // Cuando el usuario hace clic en cualquier parte fuera del modal, cerrarlo
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+                video.pause(); // Pausar el video al cerrar
+                video.currentTime = 0; // Reiniciar el video
+            }
+        }
+    </script>
+
+    <!-- Botón para abrir el modal -->
+    <button id="openModal" onclick="openModal()" class="fixed-button">Ver Guia</button>
+
+
+    <!-- PIE DE PÁGINA: Dividido en tres secciones -->
+    <footer th:replace="~{componentes/miembroMesa/footer :: footer}"></footer>
+</body>
+</html>

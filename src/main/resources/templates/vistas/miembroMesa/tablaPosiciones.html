@@ -1,0 +1,165 @@
+<head>
+    <title>Guardar Resultados</title>
+    <head th:replace="~{componentes/invitado/head :: head}"></head>
+    <!-- Importamos Font Awesome para los iconos de redes sociales -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/miembroMesa/styleRegistrarResultados.css}">
+    <link rel="stylesheet" th:href="@{/css/miembroMesa/styleModalVideo.css}">
+    <link rel="stylesheet" th:href="@{/css/miembroMesa/styleClasificacion.css}">
+
+    <!-- Librerías para exportar a PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+    <!-- ENCABEZADO -->
+    <header th:replace="~{componentes/miembroMesa/header :: header}"></header>
+
+<main>
+    <div class="clasificacion-container">
+        <!-- Encabezado de la tabla -->
+        <div class="clasificacion-header">
+            <h1>Tabla de Posiciones</h1>
+            <h1 style="text-align: center;" th:text="${campeonato.camNombre}"></h1>
+        </div>
+
+        <!-- Tabla de posiciones -->
+        <table class="tabla-clasificacion" id="tabla-posiciones">
+            <thead>
+                <tr>
+                    <th>POS</th>
+                    <th>Equipo</th>
+                    <th>PJ</th>
+                    <th>PG</th>
+                    <th>PE</th>
+                    <th>PP</th>
+                    <th>GF</th>
+                    <th>GC</th>
+                    <th>DG</th>
+                    <th>Pts</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="equipo, iterStat : ${tabla}">
+                    <td th:text="${iterStat.index + 1}"></td>
+                    <td th:text="${equipo.equipo.equNombre}"></td>
+                    <td th:text="${equipo.PJ}"></td>
+                    <td th:text="${equipo.PG}"></td>
+                    <td th:text="${equipo.PE}"></td>
+                    <td th:text="${equipo.PP}"></td>
+                    <td th:text="${equipo.GF}"></td>
+                    <td th:text="${equipo.GC}"></td>
+                    <td th:text="${equipo.DG}"></td>
+                    <td th:text="${equipo.Pts}"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Leyenda -->
+        <div class="clasificacion-info" id="leyenda">
+            <p><strong>Leyenda:</strong></p>
+            <p><strong>POS:</strong> Posición | <strong>PJ:</strong> Partidos Jugados | <strong>PG:</strong> Partidos Ganados | <strong>PE:</strong> Partidos Empatados | <strong>PP:</strong> Partidos Perdidos</p>
+            <p><strong>GF:</strong> Goles a Favor | <strong>GC:</strong> Goles en Contra | <strong>DF:</strong> Diferencia de Goles | <strong>PTOS:</strong> Puntos</p>
+            <p><strong>Nota:</strong> Los equipos se ordenan por puntos, diferencia de goles y goles a favor respectivamente.</p>
+            <div style="text-align: center; margin-top: 15px;">
+                            <button onclick="exportarTablaAPDF()" style="padding: 7px; background-color: green;color: white;border-radius: 7px; border: none;">Exportar PDF</button>
+            </div>
+
+        </div>
+    </div>
+            <!-- Botón para exportar PDF -->
+
+
+    <!-- Modal Video -->
+    <div id="videoModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <h2>Video Guia Contextual</h2>
+            <div class="video-container">
+                <video id="video" width="560" height="315" controls autoplay muted>
+                    <source th:src="@{/videos/MIEMBRO.mp4}" type="video/mp4"> 
+                    Tu navegador no soporta el video.
+                </video>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botón Ver Guía -->
+    <button id="openModal" onclick="openModal()" class="fixed-button">Ver Guia</button>
+</main>
+
+<!-- PIE DE PÁGINA -->
+<footer th:replace="~{componentes/miembroMesa/footer :: footer}"></footer>
+
+<!-- Scripts -->
+<script>
+    function openModal() {
+        var modal = document.getElementById("videoModal");
+        modal.style.display = "block";
+    }
+
+    var span = document.getElementById("closeModal");
+    var video = document.getElementById("video");
+
+    span.onclick = function() {
+        document.getElementById("videoModal").style.display = "none";
+        video.pause();
+        video.currentTime = 0;
+    }
+
+    window.onclick = function(event) {
+        if (event.target == document.getElementById("videoModal")) {
+            document.getElementById("videoModal").style.display = "none";
+            video.pause();
+            video.currentTime = 0;
+        }
+    }
+
+    function exportarTablaAPDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        // Título
+        const titulo = document.querySelector('.clasificacion-header h1')?.textContent || 'Tabla de Posiciones';
+        doc.setFontSize(16);
+        doc.text(titulo, 14, 15);
+
+        // Exportar tabla
+        doc.autoTable({
+            html: '#tabla-posiciones',
+            startY: 25,
+            styles: {
+                fontSize: 10,
+                halign: 'center',
+                cellPadding: 3
+            },
+            headStyles: {
+                fillColor: [44, 62, 80],
+                textColor: [255, 255, 255]
+            },
+            alternateRowStyles: {
+                fillColor: [245, 245, 245]
+            }
+        });
+
+        // Agregar leyenda debajo de la tabla
+        const leyendaText = [
+            "Leyenda:",
+            "POS: Posición | PJ: Partidos Jugados | PG: Partidos Ganados | PE: Partidos Empatados | PP: Partidos Perdidos",
+            "GF: Goles a Favor | GC: Goles en Contra | DF: Diferencia de Goles | PTOS: Puntos",
+            "Nota: Los equipos se ordenan por puntos, diferencia de goles y goles a favor respectivamente."
+        ];
+
+        let y = doc.autoTable.previous.finalY + 10;
+        doc.setFontSize(11);
+        leyendaText.forEach(line => {
+            doc.text(line, 14, y);
+            y += 7;
+        });
+
+        doc.save("tabla_posiciones.pdf");
+    }
+</script>
+
+</body>
+</html>

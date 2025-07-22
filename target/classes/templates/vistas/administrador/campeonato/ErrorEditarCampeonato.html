@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Asignar Equipos</title>
+    <link rel="stylesheet" th:href="@{/css/administrador/asociados.css}">
+    <link rel="stylesheet" th:href="@{/css/administrador/editarAsociados.css}">
+    <head th:replace="~{componentes/administrador/head :: head}"></head>
+</head>
+
+<body>
+    <!-- ENCABEZADO: Contiene el logo, título y navegación -->
+    <header th:replace="~{componentes/administrador/header :: header}"></header>
+    <div class="container">
+        <div class="header-actions">
+            <h2>Editar Campeonato</h2>
+        </div>  
+
+        <div class="form-container" style="text-align: justify; font-size: 18px;">
+            <h2 style="text-align: center; color: rgb(220, 200, 20);">No se puede editar este campeonato</h2><br><hr><br>
+            <div class="form-group">
+                <p>Ya se ha generado el fixture, por lo tanto ya no se pueden realizar cambios.</p>
+                <a th:href="@{/campeonatos}" class="back_button">Volver al listado</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

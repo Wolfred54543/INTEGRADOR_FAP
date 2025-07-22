@@ -1,0 +1,68 @@
+.modalAdmin {
+    display: none; 
+    position: fixed; 
+    z-index: 1000; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.modal-contentAdmin {
+    background-color: #fefefe;
+    margin: 15% auto; 
+    padding: 20px;
+    border: 1px solid #888;
+    width: 65%; 
+    position: relative;
+    top: -150px;
+}
+
+.closeAdmin {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.closeAdmin:hover,
+.closeAdmin:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.fixed-buttonAdmin {
+    position: fixed;
+    bottom: 20px; 
+    right: 20px; 
+    padding: 10px 20px; 
+    background-color: #007BFF; 
+    color: white; 
+    border: none; 
+    border-radius: 5px;
+    cursor: pointer; 
+    z-index: 1000;
+}
+
+.fixed-buttonAdmin:hover {
+    background-color: #0056b3;
+}
+
+.video-containerAdmin {
+position: relative;
+width: 100%;
+height: 0;
+padding-bottom: 56.25%;
+overflow: hidden;
+}
+
+#videoAdmin {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}

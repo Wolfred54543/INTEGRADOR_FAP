@@ -1,0 +1,122 @@
+<head>
+  <!-- Metadatos y enlaces a recursos externos -->
+  <meta charset="UTF-8" />
+  <!-- Codificación de caracteres UTF-8 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <!-- Configuración de viewport para diseño responsive -->
+  <title>Noticias FAP</title>
+  <!-- Título de la página que aparece en la pestaña del navegador -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <!-- Precarga de conexión a Google Fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Precarga de conexión a Google Fonts (cross-origin) -->
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather&family=Fugaz+One&display=swap" rel="stylesheet">
+  <!-- Enlace a las fuentes Merriweather y Fugaz One de Google Fonts -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const toggle = document.getElementById("notificationToggle");
+    const dropdown = document.getElementById("notificationDropdown");
+    const contador = document.getElementById("notificationCount");
+
+    // Oculta contador si ya se vieron todas las notificaciones
+    const total = document.getElementById("notificationList").children.length;
+    const vistas = parseInt(localStorage.getItem("notificacionesVistas")) || 0;
+
+    if (vistas >= total && contador) {
+      contador.style.display = "none";
+    }
+
+    toggle.addEventListener("click", function (event) {
+      event.preventDefault();
+      const isVisible = dropdown.style.display === "block";
+      dropdown.style.display = isVisible ? "none" : "block";
+
+      if (!isVisible && contador) {
+        // Marcar como vistas
+        const totalActual = document.getElementById("notificationList").children.length;
+        localStorage.setItem("notificacionesVistas", totalActual);
+        contador.style.display = "none";
+      }
+    });
+
+    // Cierra el menú si se hace clic fuera
+    document.addEventListener("click", function (event) {
+      if (!event.target.closest(".notification-item")) {
+        dropdown.style.display = "none";
+      }
+    });
+  });
+</script>
+
+<script>
+function cargarNotificaciones() {
+  fetch('/api/notificaciones')
+    .then(response => response.json())
+    .then(data => {
+      const lista = document.getElementById('notificationList');
+      const contador = document.getElementById('notificationCount');
+
+      lista.innerHTML = '';
+
+      const cantidadActual = data.length;
+      const cantidadVista = parseInt(localStorage.getItem('notificacionesVistas')) || 0;
+
+      if (cantidadActual === 0) {
+        lista.innerHTML = '<li>No hay comunicados nuevos.</li>';
+        contador.style.display = 'none';
+      } else {
+        data.sort((a, b) => new Date(b.comFechaPublicacion) - new Date(a.comFechaPublicacion));
+
+        data.forEach(com => {
+          const item = document.createElement('li');
+          const link = document.createElement('a');
+          link.href = '/comunicadoInvitados';
+          link.textContent = com.comTitulo;
+
+          const fecha = document.createElement('small');
+          const fechaObj = new Date(com.comFechaPublicacion + 'T00:00:00');
+          const dia = fechaObj.getDate().toString().padStart(2, '0');
+          const mes = (fechaObj.getMonth() + 1).toString().padStart(2, '0');
+          const anio = fechaObj.getFullYear();
+          fecha.textContent = `${dia}/${mes}/${anio}`;
+
+
+          item.appendChild(link);
+          item.appendChild(document.createElement('br'));
+          item.appendChild(fecha);
+          lista.appendChild(item);
+        });
+
+        // Mostrar solo si hay nuevos
+        if (cantidadActual > cantidadVista) {
+          contador.textContent = cantidadActual - cantidadVista;
+          contador.style.display = 'inline-block';
+        } else {
+          contador.style.display = 'none';
+        }
+      }
+    })
+    .catch(err => {
+      document.getElementById('notificationList').innerHTML = '<li>Error al cargar notificaciones.</li>';
+      console.error(err);
+    });
+}
+
+
+
+// Cargar inmediatamente al abrir la página
+cargarNotificaciones();
+
+// Cargar cada 30 segundos
+setInterval(cargarNotificaciones, 10000);
+</script>
+
+
+    <style>
+      i{
+          font-size: 20px;
+      }
+    </style>
+    <link rel="stylesheet" th:href="@{/css/invitado/styleNotificaciones.css}">
+</head>

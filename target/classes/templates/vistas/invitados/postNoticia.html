@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <head th:replace="~{componentes/invitado/head :: head}"></head>
+    <link rel="stylesheet" th:href="@{/css/invitado/styleNoticias.css}">
+    <link rel="stylesheet" th:href="@{/css/invitado/stylePostNoticia.css}">
+    <link rel="stylesheet" th:href="@{/css/invitado/styleHeader.css}">
+    <link rel="stylesheet" th:href="@{/css/invitado/stylePartidos.css}">
+    <link rel="stylesheet" th:href="@{/css/invitado/styleModalVideo.css}">
+</head>
+<body>
+
+<header th:replace="~{componentes/invitado/header :: header}"></header>
+
+<div class="presentation-container">
+
+    <div class="presentation-header">
+        <h1 th:text="${noticia.notTitulo}">Título de la Noticia</h1>
+        <p th:text="${noticia.notSubtitulo}">Subtítulo de la Noticia</p>
+        <p class="autor-fecha"
+            th:text="${noticia.notFechaCreacion != null ? #dates.format(noticia.notFechaCreacion, 'dd MMMM yyyy') : 'Sin fecha'}">
+        </p>
+    </div>
+
+    <div class="portada">
+        <img class="portada-img" th:src="@{/imagenes/administrador/imgNoticias/{img}(img=${noticia.notImagen})}" alt="Imagen de la noticia">
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="quote-section">
+        <p class="quote" th:text="${noticia.notDescripcion}">Descripción o contenido de la noticia</p>
+       <p class="quote-author" 
+        th:text="${noticia.notAutor != null ? noticia.notAutor : 'Anónimo'}">Autor de la Noticia</p>
+      </p>
+    </div>
+
+</div>
+
+          <!-- Modal para el video de la página -->
+    <div id="videoModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <h2>Video Guia Contextual</h2>
+            <div class="video-container">
+                <video id="video" width="560" height="315" controls autoplay muted>
+                    <source th:src="@{/videos/INVITADO.mp4}" type="video/mp4"> 
+                    Tu navegador no soporta el video.
+                </video>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Obtener el modal
+        var modal = document.getElementById("videoModal");
+
+        // Obtener el video
+        var video = document.getElementById("video");
+
+        // Obtener el elemento <span> que cierra el modal
+        var span = document.getElementById("closeModal");
+
+        // Función para abrir el modal
+        function openModal() {
+            modal.style.display = "block";
+        }
+
+        // Cuando el usuario hace clic en <span> (x), cerrar el modal
+        span.onclick = function() {
+            modal.style.display = "none";
+            video.pause(); // Pausar el video al cerrar
+            video.currentTime = 0; // Reiniciar el video
+        }
+
+        // Cuando el usuario hace clic en cualquier parte fuera del modal, cerrarlo
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+                video.pause(); // Pausar el video al cerrar
+                video.currentTime = 0; // Reiniciar el video
+            }
+        }
+    </script>
+
+    <!-- Botón para abrir el modal -->
+    <button id="openModal" onclick="openModal()" class="fixed-button">Ver Guia</button>
+
+    <!-- PIE DE PÁGINA: Dividido en tres secciones -->
+    <footer th:replace="~{componentes/miembroMesa/footer :: footer}"></footer>
+
+</body>
+</html>

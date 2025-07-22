@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:replace="~{componentes/administrador/head :: head}"></head>
+    <!-- SweetAlert CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <!-- SweetAlert JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+</head>
+
+<body>
+    <header th:replace="~{componentes/administrador/header :: header}"></header>
+ <!-- Contenido principal -->
+    <div class="container">
+        <div class="header-actions">
+            <h2>Equipos</h2>
+            <button class="btn-add" onclick="openModal()">Agregar <span>+</span></button>
+        </div>
+        
+        <!-- Campo de búsqueda con icono de lupa -->
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Buscar Equipo">
+        </div>
+        
+        <!-- Tabla de usuarios -->
+        <div class="table-container">
+  <table>
+        <thead>
+            <tr>
+                <th>Nro</th>
+                <th>Nombre del Equipo</th>
+                <th>Descripcion</th>
+                <th>Decada</th>
+                <th>Delegado</th>
+                <th>Logo</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+                 <tr th:each="equipo, iterStat : ${equipos}">
+                    <td th:text="${iterStat.index + 1}">1</td>
+                    <td th:text="${equipo.equNombre != null ? equipo.equNombre : 'Sin nombre'}">Nombre</td>
+                    <td th:text="${equipo.equDescripcion!= null ? equipo.equDescripcion : 'Sin descripcion'}">Descripcion</td>
+                    <td th:text="${equipo.decada != null ? equipo.decada.anioInicio + ' | ' + equipo.decada.getDecMes() : 'Sin Década'}">Década</td>
+                    <td th:text="${equipo.delegado != null ? equipo.delegado.nombre + ' ' + equipo.delegado.apellido : 'Sin Delegado'}">Delegado</td>
+                    <td><img th:src="@{/imagenes/administrador/imgLogoEquipos/{nombreLogo}(nombreLogo=${equipo.equLogo})}" alt="Logo del Equipo" class="img_logo_equipo"/></td>
+                    <td class="actions">
+                    <form th:action="@{/eliminarEquipo/{id}(id=${equipo.equId})}" method="post" class="form-eliminar-equipo">
+                        <button class="btn-delete" type="submit"><i class="bi bi-trash2-fill"></i> Eliminar </button>
+                    </form>
+                        <a th:href="@{/editarEquipo/{id}(id=${equipo.equId})}" style="margin-top: 5px; text-decoration: none; font-size: 13.33px; color: rgb(110, 110, 110);"><i class="bi bi-pencil-square"></i> Editar </a>
+                        <a th:href="@{/equipo/{equipoId}/jugadores(equipoId=${equipo.equId})}" 
+                        class="btn-view-team" 
+                        style="margin-left: 10px; text-decoration: none; color: rgb(110, 110, 110); margin-top: 10px; font-size: 13.33px;">
+                        👥 Ver Plantilla
+                        </a>
+                    </td>
+                </tr> 
+        </tbody>
+    </table>
+        </div>
+        
+        <!-- Sistema de paginación -->
+        <div class="pagination">
+            <!-- Flecha para ir a la página anterior -->
+            <span class="pagination-arrow">
+                <i class="fas fa-chevron-left"></i>
+            </span>
+            <!-- Números de página -->
+            <span class="pagination-item active">1</span> <!-- Página actual -->
+            <span class="pagination-item">2</span>
+            <span class="pagination-item">3</span>
+            <!-- Puntos suspensivos para indicar páginas omitidas -->
+            <span class="pagination-dots">...</span>
+            <span class="pagination-item">8</span>
+            <span class="pagination-item">9</span>
+            <span class="pagination-item">10</span>
+            <!-- Flecha para ir a la página siguiente -->
+            <span class="pagination-arrow">
+                <i class="fas fa-chevron-right"></i>
+            </span>
+        </div>
+    </div>
+    
+    <div class="modal" id="registroModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Registrar Nuevo Equipo</h2>
+            </div>
+            <form action="#" th:action="@{/registrarEquipos}" th:object="${equipo}" method="post">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="nombre">Nombre del Equipo:</label>
+                        <input type="text" id="nombre" th:field="*{equNombre}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="descripcion">Descripcion del Equipo:</label>
+                        <input type="text" id="apellido" th:field="*{equDescripcion}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="decadas">Seleccionar Década:</label>
+                        <select name="decId" id="decadas">
+                            <option value="">Seleccione una década</option>
+                            <tr th:each="decada : ${decadas}">
+                                <option th:value="${decada.decId}" th:text="${decada.decMes} + ' (' + ${decada.anioInicio} + ')'">></option>
+                            </tr>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="delegados">Seleccionar Delegado:</label>
+                        <select name="delegadoId" id="delegados" required>
+                            <option value="">Seleccione un delegado</option>
+                            <tr th:each="delegado : ${delegados}">
+                                <option th:value="${delegado.usuId}" th:text="${delegado.nombre} + ' ' + ${delegado.apellido}"></option>
+                            </tr>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="logo">Logo del Equipo:</label>
+                        <input type="file" id="" th:field="*{equLogo}" required>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn-primary" onclick="submitForm()">Añadir</button>
+                    <button type="button" class="btn-secondary" onclick="closeModal()">Anular</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openModal() {
+            document.getElementById('registroModal').style.display = 'block';
+        }
+        
+        function closeModal() {
+            document.getElementById('registroModal').style.display = 'none';
+        }
+    </script>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const forms = document.querySelectorAll(".form-eliminar-equipo");
+
+            forms.forEach(form => {
+                form.addEventListener("submit", function (e) {
+                    e.preventDefault(); // Evita que se envíe automáticamente
+
+                    Swal.fire({
+                        title: '¿Estás seguro?',
+                        text: "¡Esta acción no se puede deshacer!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Sí, eliminar',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit(); // Envía el formulario si el usuario confirma
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+
+        const error = params.get("error");
+        const success = params.get("success");
+
+        if (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error...',
+                text: decodeURIComponent(error),
+                confirmButtonText: 'Entendido'
+            });
+        }
+
+        if (success) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Éxito',
+                text: decodeURIComponent(success),
+                confirmButtonText: 'Perfecto'
+            });
+        }
+
+        // Esta condicional limpia la URL después de mostrar los mensajes
+        if (error || success) {
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+    </script>
+
+              <!-- Modal para el video de la página -->
+    <div id="videoModalAdmin" class="modalAdmin">
+        <div class="modal-contentAdmin">
+            <span class="closeAdmin" id="closeModalAdmin">&times;</span>
+            <h2>Video Guia</h2>
+            <div class="video-containerAdmin">
+                <video id="videoAdmin" width="560" height="315" controls autoplay muted>
+                    <source th:src="@{/videos/ADMIN.mp4}" type="video/mp4"> 
+                    Tu navegador no soporta el video.
+                </video>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Obtener el modal
+        var modal = document.getElementById("videoModalAdmin");
+
+        // Obtener el video
+        var video = document.getElementById("videoAdmin");
+
+        // Obtener el elemento <span> que cierra el modal
+        var span = document.getElementById("closeModalAdmin");
+
+        // Función para abrir el modal
+        function openModalAdmin() {
+            modal.style.display = "block";
+        }
+
+        // Cuando el usuario hace clic en <span> (x), cerrar el modal
+        span.onclick = function() {
+            modal.style.display = "none";
+            video.pause(); // Pausar el video al cerrar
+            video.currentTime = 0; // Reiniciar el video
+        }
+
+        // Cuando el usuario hace clic en cualquier parte fuera del modal, cerrarlo
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+                video.pause(); // Pausar el video al cerrar
+                video.currentTime = 0; // Reiniciar el video
+            }
+        }
+    </script>
+
+    <!-- Botón para abrir el modal -->
+    <button id="openModalAdmin" onclick="openModalAdmin()" class="fixed-buttonAdmin">Ver Guia</button>
+    
+</body>
+</html>
+
+
+

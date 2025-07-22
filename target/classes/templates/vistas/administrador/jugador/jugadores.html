@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:replace="~{componentes/administrador/head :: head}"></head>
+</head>
+
+<body>
+    <header th:replace="~{componentes/administrador/header :: header}"></header>
+
+    <!-- Contenido principal -->
+    <div class="container">
+        <div class="header-actions">
+            <h2>Jugadores</h2>
+            <button class="btn-add" onclick="openModal()">Agregar <span>+</span></button>
+        </div>
+        
+        <!-- Campo de búsqueda con icono de lupa -->
+        <form method="get" th:action="@{/formularioJugadores}" class="search-container">
+            <input type="text" name="buscar" class="search-input" placeholder="Buscar Jugador"
+                th:value="${buscar}">
+            <input type="hidden" name="page" value="0" />
+        </form>
+        
+        <!-- Tabla de usuarios -->
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nro</th>
+                        <th>Nombres</th>
+                        <th>Apellidos</th>
+                        <th>DNI</th>
+                        <th>Decada</th>
+                        <th>Equipo</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="jugador, iterStat : ${jugadores}">
+                        <td th:text="${paginaActual * tamañoPagina + iterStat.index + 1}"></td>
+                        <td th:text="${jugador.jugNombre != null ? jugador.jugNombre : 'Sin nombre'}">Nombre</td>
+                        <td th:text="${jugador.jugApellido != null ? jugador.jugApellido : 'Sin apellido'}">Apellido</td>
+                        <td th:text="${jugador.jugDni != null ? jugador.jugDni : 'Sin DNI'}">DNI</td>
+                        <td th:text="${jugador.decada != null ? jugador.decada.anioInicio + ' | ' + jugador.decada.getDecMes() : 'Sin Decada'}">Decada</td>
+                        <td style="font-size: 12px;">
+                            <span th:if="${jugador.equipo != null}" style="color: white; padding: 6px; max-width: 20px; background-color: rgb(30, 107, 0); border-radius: 25px;" th:text="${jugador.equipo.equNombre}"></span>
+                            <span th:unless="${jugador.equipo != null}" style="color: white; padding: 6px; max-width: 20px; background-color: crimson; border-radius: 25px;">Sin Equipo</span>
+                        </td>
+
+                        <td class="actions">
+                        <form th:action="@{/eliminarJugador/{id}(id=${jugador.jugId})}" method="post" class="form-eliminar-jugador">
+                            <button class="btn-delete" type="submit"><i class="bi bi-trash2-fill"></i> Eliminar </button>
+                        </form>
+                            <a th:href="@{/editarJugador/{id}(id=${jugador.jugId})}" style="margin-top: 5px; text-decoration: none; font-size: 13.33px; color: rgb(110, 110, 110);"><i class="bi bi-pencil-square"></i> Editar </a>
+                            <a th:href="@{/asignarEquipo(jugadorId=${jugador.jugId})}" class="btn-assign" style="margin-top: 5px; text-decoration: none; font-size: 13.33px; color: rgb(110, 110, 110);"><i class="bi bi-shield-shaded"></i> Asignar Equipo </a>
+                        </td>
+                    </tr> 
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Paginación dinámica -->
+        <div class="pagination" th:if="${totalPaginas > 0}">
+            <!-- Botón anterior -->
+            <span class="pagination-arrow" th:if="${paginaActual > 0}">
+                <a th:href="@{/formularioJugadores(page=${paginaActual - 1}, buscar=${buscar})}">
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+            </span>
+
+            <!-- Páginas numeradas -->
+            <span class="pagination-item"
+                th:each="i : ${#numbers.sequence(0, totalPaginas - 1)}"
+                th:classappend="${i == paginaActual} ? 'active'">
+                <a th:href="@{/formularioJugadores(page=${i}, buscar=${buscar})}" th:text="${i + 1}"></a>
+            </span>
+
+            <!-- Botón siguiente -->
+            <span class="pagination-arrow" th:if="${paginaActual < totalPaginas - 1}">
+                <a th:href="@{/formularioJugadores(page=${paginaActual + 1}, buscar=${buscar})}">
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+            </span>
+        </div>
+
+    </div>
+    
+    <div class="modal" id="registroModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Registrar Nuevo Equipo</h2>
+            </div>
+            <form th:action="@{/registrarJugadores}" th:object="${jugador}" method="post">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="nombre">Nombres del Jugador:</label>
+                        <input type="text" id="nombre" th:field="*{jugNombre}" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="nombre">Apellidos del Jugador:</label>
+                        <input type="text" id="nombre" th:field="*{jugApellido}" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="nombre">DNI del Jugador:</label>
+                        <input type="text" id="nombre" th:field="*{jugDni}" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="decada">Seleccionar Década:</label>
+                        <select id="decada" th:field="*{decada}" required>
+                            <option value="" disabled selected>Seleccione una década</option>
+                            <option th:each="decada : ${decadas}" th:value="${decada.decId}" th:text="${decada.anioInicio} + ' (' + ${decada.decMes} + ')'"></option>
+                        </select>
+                    </div>
+               </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn-primary" onclick="submitForm()">Añadir</button>
+                    <button type="button" class="btn-secondary" onclick="closeModal()">Anular</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+        <script>
+            function openModal() {
+                document.getElementById('registroModal').style.display = 'block';
+            }
+            
+            function closeModal() {
+                document.getElementById('registroModal').style.display = 'none';
+            }
+        </script>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const forms = document.querySelectorAll(".form-eliminar-jugador");
+
+                forms.forEach(form => {
+                    form.addEventListener("submit", function (e) {
+                        e.preventDefault(); // Evita que se envíe automáticamente
+
+                        Swal.fire({
+                            title: '¿Estás seguro?',
+                            text: "¡Esta acción no se puede deshacer!",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Sí, eliminar',
+                            cancelButtonText: 'Cancelar'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                form.submit(); // Envía el formulario si el usuario confirma
+                            }
+                        });
+                    });
+                });
+            });
+        </script>
+
+        <script>
+            const params = new URLSearchParams(window.location.search);
+
+            const error = params.get("error");
+            const success = params.get("success");
+
+            if (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error...',
+                    text: decodeURIComponent(error),
+                    confirmButtonText: 'Entendido'
+                });
+            }
+
+            if (success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Éxito',
+                    text: decodeURIComponent(success),
+                    confirmButtonText: 'Perfecto'
+                });
+            }
+
+            // Esta condicional limpia la URL después de mostrar los mensajes
+            if (error || success) {
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        </script>
+
+          <!-- Modal para el video de la página -->
+    <div id="videoModalAdmin" class="modalAdmin">
+        <div class="modal-contentAdmin">
+            <span class="closeAdmin" id="closeModalAdmin">&times;</span>
+            <h2>Video Guia</h2>
+            <div class="video-containerAdmin">
+                <video id="videoAdmin" width="560" height="315" controls autoplay muted>
+                    <source th:src="@{/videos/ADMIN.mp4}" type="video/mp4"> 
+                    Tu navegador no soporta el video.
+                </video>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Obtener el modal
+        var modal = document.getElementById("videoModalAdmin");
+
+        // Obtener el video
+        var video = document.getElementById("videoAdmin");
+
+        // Obtener el elemento <span> que cierra el modal
+        var span = document.getElementById("closeModalAdmin");
+
+        // Función para abrir el modal
+        function openModalAdmin() {
+            modal.style.display = "block";
+        }
+
+        // Cuando el usuario hace clic en <span> (x), cerrar el modal
+        span.onclick = function() {
+            modal.style.display = "none";
+            video.pause(); // Pausar el video al cerrar
+            video.currentTime = 0; // Reiniciar el video
+        }
+
+        // Cuando el usuario hace clic en cualquier parte fuera del modal, cerrarlo
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+                video.pause(); // Pausar el video al cerrar
+                video.currentTime = 0; // Reiniciar el video
+            }
+        }
+    </script>
+
+    <!-- Botón para abrir el modal -->
+    <button id="openModalAdmin" onclick="openModalAdmin()" class="fixed-buttonAdmin">Ver Guia</button>
+    
+    </body> 
+</html>

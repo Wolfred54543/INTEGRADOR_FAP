@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:replace="~{componentes/administrador/head :: head}"></head>
+<body>
+    <!-- Encabezado -->
+    <header th:replace="~{componentes/administrador/header :: header}"></header>
+    <!-- Contenido principal -->
+    <div class="container">
+        <div class="header-actions">
+            <h2>Correo</h2>
+        </div>
+            
+        <!-- Campo de búsqueda con icono de lupa -->
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Buscar Correo">
+        </div>
+            
+        <!-- Tabla de usuarios -->
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nro</th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Email</th>
+                        <th>Telefono</th>
+                        <th>Mensaje</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="contactanos, iterStat : ${contactanos}">
+                            <td th:text="${iterStat.index + 1}">1</td>
+                            <td th:text="${contactanos.conNombre}">Nombre</td>
+                            <td th:text="${contactanos.conApellido}">Apellido</td>
+                            <td th:text="${contactanos.conEmail}">Email</td>
+                            <td th:text="${contactanos.conTelefono}">Telefono</td>
+                            <td th:text="${contactanos.conMensaje}">Mensaje</td>
+                            <!-- <td class="actions">
+                                <form method="post" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este reclamo?');">
+                                <button class="btn-delete" type="submit">🗑️</button>
+                                </form>
+                                    <a th:href="@{/editarUsuario/{id}(id=${usuario.usuId})}">✏️</a>
+                            </td> -->
+                    </tr>
+            
+                </tbody>
+            </table>
+        </div>
+                <!-- Sistema de paginación -->
+        <div class="pagination">
+            <!-- Flecha para ir a la página anterior -->
+            <span class="pagination-arrow">
+                <i class="fas fa-chevron-left"></i>
+            </span>
+            <!-- Números de página -->
+            <span class="pagination-item active">1</span> <!-- Página actual -->
+            <span class="pagination-item">2</span>
+            <span class="pagination-item">3</span>
+            <!-- Puntos suspensivos para indicar páginas omitidas -->
+            <span class="pagination-dots">...</span>
+            <span class="pagination-item">8</span>
+            <span class="pagination-item">9</span>
+            <span class="pagination-item">10</span>
+            <!-- Flecha para ir a la página siguiente -->
+            <span class="pagination-arrow">
+                <i class="fas fa-chevron-right"></i>
+            </span>
+        </div>
+    </div>   
+
+              <!-- Modal para el video de la página -->
+    <div id="videoModalAdmin" class="modalAdmin">
+        <div class="modal-contentAdmin">
+            <span class="closeAdmin" id="closeModalAdmin">&times;</span>
+            <h2>Video Guia</h2>
+            <div class="video-containerAdmin">
+                <video id="videoAdmin" width="560" height="315" controls autoplay muted>
+                    <source th:src="@{/videos/ADMIN.mp4}" type="video/mp4"> 
+                    Tu navegador no soporta el video.
+                </video>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Obtener el modal
+        var modal = document.getElementById("videoModalAdmin");
+
+        // Obtener el video
+        var video = document.getElementById("videoAdmin");
+
+        // Obtener el elemento <span> que cierra el modal
+        var span = document.getElementById("closeModalAdmin");
+
+        // Función para abrir el modal
+        function openModalAdmin() {
+            modal.style.display = "block";
+        }
+
+        // Cuando el usuario hace clic en <span> (x), cerrar el modal
+        span.onclick = function() {
+            modal.style.display = "none";
+            video.pause(); // Pausar el video al cerrar
+            video.currentTime = 0; // Reiniciar el video
+        }
+
+        // Cuando el usuario hace clic en cualquier parte fuera del modal, cerrarlo
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+                video.pause(); // Pausar el video al cerrar
+                video.currentTime = 0; // Reiniciar el video
+            }
+        }
+    </script>
+
+    <!-- Botón para abrir el modal -->
+    <button id="openModalAdmin" onclick="openModalAdmin()" class="fixed-buttonAdmin">Ver Guia</button>
+</body>
+</html>

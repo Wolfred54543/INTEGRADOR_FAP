@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{componentes/administrador/head :: head}"></head>
+<body>
+    <header th:replace="~{componentes/administrador/header :: header}"></header>
+ <!-- Contenido principal -->
+    <div class="container">
+        <div class="header-actions">
+            <h2>Noticias</h2>
+            <button class="btn-add" onclick="openModal()">Agregar <span>+</span></button>
+        </div>
+        
+        <!-- Campo de búsqueda con icono de lupa -->
+        <form method="get" th:action="@{/formularioNoticias}" class="search-container">
+            <input type="text" name="buscar" class="search-input" placeholder="Buscar Jugador"
+                th:value="${buscar}">
+            <input type="hidden" name="page" value="0" />
+        </form>
+        
+        <!-- Tabla de usuarios -->
+        <div class="table-container">
+  <table>
+        <thead>
+            <tr>
+                <th>Nro</th>
+                <th>Tipo</th>
+                <th>Titulo</th>
+                <th>Subtitulo</th>
+                <th>Descripcion</th>
+                <th>Autor</th>
+                <th>Imagen</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+                 <tr th:each="noticia, iterStat : ${noticias}">
+                    <td th:text="${iterStat.index + 1}">1</td>
+                    <td th:text="${noticia.notTipo != null ? noticia.notTipo : 'Sin tipo'}">Tipo</td>
+                    <td th:text="${noticia.notTitulo != null ? noticia.notTitulo : 'Sin titulo'}">Titulo</td>
+                    <td th:text="${noticia.notSubtitulo != null ? noticia.notSubtitulo : 'Sin Subtitulo'}">Subtitulo</td>
+                    <td th:text="${noticia.notDescripcion != null ? noticia.notDescripcion : 'Sin descripcion'}">Descripcion</td>
+                     <td th:text="${noticia.notAutor != null ? noticia.notAutor : 'Sin Autor'}">Autor</td>
+                    <td><img th:src="@{/imagenes/administrador/imgNoticias/{nombreImagen}(nombreImagen=${noticia.notImagen})}" alt="Img de la noticia" width="130" height="100" style="border-radius: 10px;" class="img_comunicado"/></td>
+                    <td class="actions">
+                        <form th:action="@{/eliminarNoticia/{id}(id=${noticia.notId})}" method="post" class="form-eliminar-noticia">
+                            <button class="btn-delete" type="submit"><i class="bi bi-trash2-fill"></i> Eliminar </button>
+                        </form>
+                        <a th:href="@{/editarNoticia/{id}(id=${noticia.notId})}" style="margin-top: 5px; text-decoration: none; font-size: 13.33px; color: rgb(110, 110, 110);"><i class="bi bi-pencil-square"></i> Editar </a>
+                    </td>
+                </tr> 
+        </tbody>
+    </table>
+        </div>
+        
+        <!-- Paginación dinámica -->
+        <div class="pagination">
+            <span class="pagination-arrow" th:if="${paginaActual > 0}">
+                <a th:href="@{/formularioNoticias(page=${paginaActual - 1}, buscar=${buscar})}">
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+            </span>
+
+            <span class="pagination-item"
+                th:each="i : ${#numbers.sequence(0, totalPaginas - 1)}"
+                th:classappend="${i == paginaActual} ? 'active'">
+                <a th:href="@{/formularioNoticias(page=${i}, buscar=${buscar})}" th:text="${i + 1}"></a>
+            </span>
+
+            <span class="pagination-arrow" th:if="${paginaActual < totalPaginas - 1}">
+                <a th:href="@{/formularioNoticias(page=${paginaActual + 1}, buscar=${buscar})}">
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+            </span>
+        </div>
+    </div>
+    
+    <div class="modal" id="registroModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Registrar Nueva Noticia</h2>
+            </div>
+            <form action="#" th:action="@{/registrarNoticias}" th:object="${noticia}" method="post">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <select id="tipo" th:field="*{notTipo}" required>
+                            <option value="">-- Selecciona el tipo de noticia --</option>
+                            <option value="principal">Principal</option>
+                            <option value="secundaria">Secundaria</option>
+                        </select>
+                    </div><br>
+                    <div class="form-group">
+                        <label for="nombre">Titulo de la Noticia:</label>
+                        <input type="text" id="nombre" th:field="*{notTitulo}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nombre">Subtitulo de la Noticia:</label>
+                        <input type="text" id="nombre" th:field="*{notSubtitulo}">
+                    </div>
+                    <div class="form-group">
+                        <label for="descripcion">Descripcion de la Noticia:</label>
+                        <textarea class="form-textarea" type="text" id="apellido" th:field="*{notDescripcion}" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="descripcion">Autor de la Noticia:</label>
+                        <input type="text" id="apellido" th:field="*{notAutor}">
+                    </div>
+                    <div class="form-group">
+                        <label for="logo">Imagen del Comunicado:</label>
+                        <input type="file" id="" th:field="*{notImagen}">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn-primary" onclick="submitForm()">Añadir</button>
+                    <button type="button" class="btn-secondary" onclick="closeModal()">Anular</button>
+                </div>
+ 
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openModal() {
+            document.getElementById('registroModal').style.display = 'block';
+        }
+        
+        function closeModal() {
+            document.getElementById('registroModal').style.display = 'none';
+        }
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const forms = document.querySelectorAll(".form-eliminar-noticia");
+
+            forms.forEach(form => {
+                form.addEventListener("submit", function (e) {
+                    e.preventDefault(); // Evita que se envíe automáticamente
+
+                    Swal.fire({
+                        title: '¿Estás seguro?',
+                        text: "¡Esta acción no se puede deshacer!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Sí, eliminar',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit(); // Envía el formulario si el usuario confirma
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+
+        const error = params.get("error");
+        const success = params.get("success");
+
+        if (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error...',
+                text: decodeURIComponent(error),
+                confirmButtonText: 'Entendido'
+            });
+        }
+
+        if (success) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Éxito',
+                text: decodeURIComponent(success),
+                confirmButtonText: 'Perfecto'
+            });
+        }
+
+        // Esta condicional limpia la URL después de mostrar los mensajes
+        if (error || success) {
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+    </script>
+
+          <!-- Modal para el video de la página -->
+    <div id="videoModalAdmin" class="modalAdmin">
+        <div class="modal-contentAdmin">
+            <span class="closeAdmin" id="closeModalAdmin">&times;</span>
+            <h2>Video Guia</h2>
+            <div class="video-containerAdmin">
+                <video id="videoAdmin" width="560" height="315" controls autoplay muted>
+                    <source th:src="@{/videos/ADMIN.mp4}" type="video/mp4"> 
+                    Tu navegador no soporta el video.
+                </video>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Obtener el modal
+        var modal = document.getElementById("videoModalAdmin");
+
+        // Obtener el video
+        var video = document.getElementById("videoAdmin");
+
+        // Obtener el elemento <span> que cierra el modal
+        var span = document.getElementById("closeModalAdmin");
+
+        // Función para abrir el modal
+        function openModalAdmin() {
+            modal.style.display = "block";
+        }
+
+        // Cuando el usuario hace clic en <span> (x), cerrar el modal
+        span.onclick = function() {
+            modal.style.display = "none";
+            video.pause(); // Pausar el video al cerrar
+            video.currentTime = 0; // Reiniciar el video
+        }
+
+        // Cuando el usuario hace clic en cualquier parte fuera del modal, cerrarlo
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+                video.pause(); // Pausar el video al cerrar
+                video.currentTime = 0; // Reiniciar el video
+            }
+        }
+    </script>
+
+    <!-- Botón para abrir el modal -->
+    <button id="openModalAdmin" onclick="openModalAdmin()" class="fixed-buttonAdmin">Ver Guia</button>
+    
+</body>
+</html>

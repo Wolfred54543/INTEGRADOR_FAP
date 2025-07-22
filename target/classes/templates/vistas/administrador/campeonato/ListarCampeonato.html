@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Administrar | Campeonatos</title>
+    <head th:replace="~{componentes/administrador/head :: head}"></head>
+    <link rel="stylesheet" th:href="@{/css/administrador/comunicados.css}">
+    <link rel="stylesheet" th:href="@{/css/administrador/campeonatos.css}">
+</head>
+<body>
+    <header th:replace="~{componentes/administrador/header :: header}"></header>
+    
+    <div class="page-header" style="background: white; color: black;">
+        <h1 class="page-title">Administrar Campeonatos</h1>
+        <p class="page-subtitle">Crear, editar y gestionar campeonatos</p>
+    </div>
+    <div class="page-header" style="background: none;">
+        <a th:href="@{/nuevoCampeonato}" class="nuevo-btn">Crear un Nuevo Campeonato +</a>
+    </div>
+
+    <div th:each="campeonato : ${campeonatos}" class="tarjeta-campeonato">
+        <div class="tarjeta-header" th:text="${campeonato.camNombre}"></div>
+        <div class="tarjeta-detalle"><strong>Fecha Creación:</strong> <span th:text="${campeonato.camFechaCreacion}"></span></div>
+        <div class="tarjeta-detalle"><strong>Estado:</strong> <span th:text="${campeonato.camEstado}"></span></div>
+        <div class="tarjeta-detalle"><strong>Máx. Equipos:</strong> <span th:text="${campeonato.camTotalEquipos}"></span></div>
+        <div class="tarjeta-detalle"><strong>Década:</strong> <span th:text="${campeonato.decada.decMes + ' de ' + campeonato.decada.anioInicio}"></span></div>
+
+        <div class="acciones">
+            <a th:href="@{'/editarCampeonato/' + ${campeonato.camId}}">Editar</a>
+
+            <form th:action="@{'/eliminarCampeonato/' + ${campeonato.camId}}" method="post" class="form-eliminar">
+                <button type="submit" class="eliminar-btn">Eliminar</button>
+            </form>
+
+            <a th:href="@{'/asignarEquipos/' + ${campeonato.camId}}" class="equipos-btn">Añadir Equipos</a>
+            <a th:href="@{'/partidos/campeonato/' + ${campeonato.camId}}">Asignar Fecha y Hora de los Partidos</a>
+        </div>
+
+    </div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const formulariosEliminar = document.querySelectorAll('.form-eliminar');
+
+        formulariosEliminar.forEach(form => {
+            form.addEventListener('submit', function (e) {
+                e.preventDefault(); // Evita el envío inmediato
+
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: "Esta acción no se puede deshacer.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit(); // Envía el formulario solo si confirma
+                    }
+                });
+            });
+        });
+    });
+</script>
+
+<script>
+    const params = new URLSearchParams(window.location.search);
+
+    const error = params.get("error");
+    const success = params.get("success");
+
+    if (error) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error...',
+            text: decodeURIComponent(error),
+            confirmButtonText: 'Entendido'
+        });
+    }
+
+    if (success) {
+        Swal.fire({
+            icon: 'success',
+            title: 'Éxito',
+            text: decodeURIComponent(success),
+            confirmButtonText: 'Perfecto'
+        });
+    }
+
+    // Esta condicional limpia la URL después de mostrar los mensajes
+    if (error || success) {
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+</script>
+
+          <!-- Modal para el video de la página -->
+    <div id="videoModalAdmin" class="modalAdmin">
+        <div class="modal-contentAdmin">
+            <span class="closeAdmin" id="closeModalAdmin">&times;</span>
+            <h2>Video Guia</h2>
+            <div class="video-containerAdmin">
+                <video id="videoAdmin" width="560" height="315" controls autoplay muted>
+                    <source th:src="@{/videos/ADMIN.mp4}" type="video/mp4"> 
+                    Tu navegador no soporta el video.
+                </video>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Obtener el modal
+        var modal = document.getElementById("videoModalAdmin");
+
+        // Obtener el video
+        var video = document.getElementById("videoAdmin");
+
+        // Obtener el elemento <span> que cierra el modal
+        var span = document.getElementById("closeModalAdmin");
+
+        // Función para abrir el modal
+        function openModalAdmin() {
+            modal.style.display = "block";
+        }
+
+        // Cuando el usuario hace clic en <span> (x), cerrar el modal
+        span.onclick = function() {
+            modal.style.display = "none";
+            video.pause(); // Pausar el video al cerrar
+            video.currentTime = 0; // Reiniciar el video
+        }
+
+        // Cuando el usuario hace clic en cualquier parte fuera del modal, cerrarlo
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+                video.pause(); // Pausar el video al cerrar
+                video.currentTime = 0; // Reiniciar el video
+            }
+        }
+    </script>
+
+    <!-- Botón para abrir el modal -->
+    <button id="openModalAdmin" onclick="openModalAdmin()" class="fixed-buttonAdmin">Ver Guia</button>
+    
+</body>
+</html>
+

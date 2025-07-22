@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{componentes/administrador/head :: head}"></head>
+<body>
+    <header th:replace="~{componentes/administrador/header :: header}"></header>
+ <!-- Contenido principal -->
+    <div class="container">
+        <div class="header-actions">
+            <h2>Decadas</h2>
+            <button class="btn-add" onclick="openModal()">Agregar <span>+</span></button>
+        </div>
+        
+        <!-- Barra de búsqueda -->
+        <div class="search-bar">
+            <span class="search-icon">🔍</span>
+            <input type="text" placeholder="Buscar Equipo">
+        </div>
+        
+        <!-- Tabla de usuarios -->
+        <div class="table-container">
+  <table>
+        <thead>
+            <tr>
+                <th>Nro</th>
+                <th>Año</th>
+                <th>Mes</th>
+            </tr>
+        </thead>
+        <tbody>
+                 <tr th:each="decada, iterStat : ${decadas}">
+                    <td th:text="${iterStat.index + 1}">1</td>
+                    <td th:text="${decada.anioInicio != null ? decada.anioInicio : 'Sin Año'}">Año</td>
+                    <td th:text="${decada.decMes!= null ? decada.decMes : 'Sin Mes'}">Mes</td>
+                    <!-- <td class="actions">
+                    <form th:action="@{/eliminarlicenciado/{id}(id=${licenciado.licId})}" method="post" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este licenciado?');">
+                    <button class="btn-delete" type="submit">🗑️</button>
+                    </form>
+                         <a th:href="@{/editarlicenciado/{id}(id=${licenciado.licId})}">✏️</a>
+                    </td> -->
+                </tr> 
+        </tbody>
+    </table>
+        </div>
+        
+        <!-- Paginación -->
+        <div class="pagination">
+            <button>&lt;</button>
+            <button class="active">1</button>
+            <button>2</button>
+            <button>3</button>
+            <button>...</button>
+            <button>8</button>
+            <button>9</button>
+            <button>10</button>
+            <button>&gt;</button>
+        </div>
+    </div>
+    
+    <div class="modal" id="registroModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Registrar Nueva Decada</h2>
+            </div>
+            <form action="#" th:action="@{/registrarDecadas}" th:object="${decada}" method="post">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="nombre">Año:</label>
+                        <input type="number" id="nombre" th:field="*{anioInicio}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="descripcion">Mes:</label>
+                        <input type="text" id="apellido" th:field="*{decMes}" required>
+                    </div>
+                </div>
+                    <div class="modal-footer">
+                    <button type="submit" class="btn-primary" onclick="submitForm()">Añadir</button>
+                    <button type="button" class="btn-secondary" onclick="closeModal()">Anular</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openModal() {
+            document.getElementById('registroModal').style.display = 'block';
+        }
+        
+        function closeModal() {
+            document.getElementById('registroModal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

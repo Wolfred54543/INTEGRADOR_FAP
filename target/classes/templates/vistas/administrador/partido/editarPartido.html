@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Partido</title>
+    <link rel="stylesheet" th:href="@{/css/administrador/asociados.css}">
+    <link rel="stylesheet" th:href="@{/css/administrador/editarAsociados.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+<header th:replace="~{componentes/administrador/header :: header}"></header>
+
+<div class="container">
+        <div class="header-actions">
+            <h2>Asignar Fecha y Hora</h2>
+        </div>
+    <div class="form-container">
+        <form th:action="@{/actualizarPartido}" th:object="${partido}" method="post">
+            <input type="hidden" th:field="*{parId}" />
+
+            <div class="form-group">
+                <label for="parFecha">Fecha:</label>
+                <input type="date" id="parFecha" th:field="*{parFecha}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="parHora">Hora:</label>
+                <input type="time" id="parHora" th:field="*{parHora}" required>
+            </div>
+
+            <button type="submit">Actualizar</button>
+        </form>
+            <a href="javascript:history.back()" class="back_button">Volver a la lista de partidos</a>
+    </div>
+</div>
+
+</body>
+</html>

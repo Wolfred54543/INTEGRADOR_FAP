@@ -1,0 +1,75 @@
+/* Contenedor general */
+.clasificacion-container {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    max-width: 1000px;
+    margin: auto;
+}
+
+/* Título */
+.clasificacion-header h3 {
+    color: #000000;
+    font-size: 22px;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.clasificacion-header h1 {
+    font-size: 26px;
+    color: #34495e;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+/* Tabla */
+.tabla-clasificacion {
+    width: 100%;
+    border-collapse: collapse;
+    background: #f9f9f9;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.tabla-clasificacion thead {
+    background-color: #707070;
+    color: #ffffff;
+}
+
+.tabla-clasificacion th, .tabla-clasificacion td {
+    padding: 12px 16px;
+    text-align: center;
+    border-bottom: 1px solid #dddddd;
+    font-size: 15px;
+}
+
+.tabla-clasificacion tbody tr:hover {
+    background-color: #f0f4f8;
+    cursor: default;
+}
+
+.tabla-clasificacion tbody tr:nth-child(even) {
+    background-color: #f6f9fc;
+}
+
+.tabla-clasificacion th:first-child,
+.tabla-clasificacion td:first-child {
+    font-weight: bold;
+    color: #155a21;
+}
+
+/* Leyenda */
+.clasificacion-info {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #555;
+    line-height: 1.6;
+}
+
+.clasificacion-info p strong {
+    color: #2c3e50;
+}
+
+

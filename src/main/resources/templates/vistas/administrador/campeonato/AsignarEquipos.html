@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Asignar Equipos</title>
+    <link rel="stylesheet" th:href="@{/css/administrador/asociados.css}">
+    <link rel="stylesheet" th:href="@{/css/administrador/editarAsociados.css}">
+    <head th:replace="~{componentes/administrador/head :: head}"></head>
+</head>
+<body>
+    <!-- ENCABEZADO: Contiene el logo, título y navegación -->
+    <header th:replace="~{componentes/administrador/header :: header}"></header>
+
+    <div class="container">
+
+        <div class="header-actions">
+            <h2 th:text="'Asignar Equipos a: ' + ${campeonato.camNombre}"></h2>
+        </div>     
+
+        <div th:if="${mensajeEquiposImpares}" class="alert alert-warning" role="alert" style="margin-top: 10px;">
+            <p th:text="${mensajeEquiposImpares}"></p>
+        </div>
+
+        <div th:if="${#lists.isEmpty(equiposAsignados)}" class="form-container">
+
+            <!--Mostrar mensaje si no hay equipos disponibles -->
+            <div th:if="${#lists.isEmpty(equiposDisponibles)}">
+                <div style="text-align: justify; font-size: 18px;">
+                    <h2 style="text-align: center; color: crimson;">No se encontraron equipos</h2><br><hr><br>
+                    <p>No hay equipos registrados pertencientes a esta decada.</p>
+                    <a th:href="@{/campeonatos}" class="back_button">Volver al listado de campeonatos</a>
+                </div>
+            </div>
+
+            <!--Mostrar formulario solo si hay equipos disponibles -->
+            <form th:if="${!#lists.isEmpty(equiposDisponibles)}" th:action="@{/partidos/sorteo}" method="post">
+                <input type="hidden" name="campeonatoId" th:value="${campeonato.camId}" />
+
+                <div th:each="i : ${#numbers.sequence(0, campeonato.camTotalEquipos - 1)}" class="form-group">
+                    <label th:for="'equipo' + ${i}">Equipo [[${i + 1}]]:</label>
+
+                    <th:block th:with="equipoSeleccionado=${equiposDisponibles[i]}">
+                        <select name="equiposSeleccionados" required>
+                            <option value="" disabled>Selecciona un equipo</option>
+                            <option th:each="equipo : ${equiposDisponibles}"
+                                    th:value="${equipo.equId}"
+                                    th:text="${equipo.equNombre}"
+                                    th:selected="${equipo.equId == equipoSeleccionado.equId}">
+                            </option>
+                        </select>
+                    </th:block>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="form-confirmar-fixture">Generar Fixture</button>
+                    <a th:href="@{/campeonatos}" class="back_button">Volver al inicio</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Si ya hay equipos asignados -->
+        <div th:unless="${#lists.isEmpty(equiposAsignados)}" class="container">
+            <div class="form-container" style="text-align: justify; font-size: 18px;">
+                <h2 style="text-align: center; color: rgb(220, 200, 20);">No se pueden añadir equipos</h2><br><hr><br>
+                <p>Ya se generó el fixture para este campeonato. Por lo tanto ya no se pueden asignar equipos.</p>
+                <a th:href="@{/campeonatos}" class="back_button">Volver al listado de campeonatos</a>
+            </div>
+        </div>
+    </div>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const forms = document.querySelectorAll(".form-confirmar-fixture");
+
+                forms.forEach(form => {
+                    form.addEventListener("submit", function (e) {
+                        e.preventDefault(); // Evita que se envíe automáticamente
+
+                        Swal.fire({
+                            title: '¿Estás seguro?',
+                            text: "¡Esta acción no se puede deshacer!",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Sí, eliminar',
+                            cancelButtonText: 'Cancelar'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                form.submit(); // Envía el formulario si el usuario confirma
+                            }
+                        });
+                    });
+                });
+            });
+        </script>
+
+        <script>
+            const params = new URLSearchParams(window.location.search);
+
+            const error = params.get("error");
+            const success = params.get("success");
+
+            if (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error...',
+                    text: decodeURIComponent(error),
+                    confirmButtonText: 'Entendido'
+                });
+            }
+
+            if (success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Éxito',
+                    text: decodeURIComponent(success),
+                    confirmButtonText: 'Perfecto'
+                });
+            }
+
+            // Esta condicional limpia la URL después de mostrar los mensajes
+            if (error || success) {
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        </script>
+
+
+</body>
+</html>
+
+
+
+  

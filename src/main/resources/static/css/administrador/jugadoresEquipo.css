@@ -1,0 +1,252 @@
+/* Estilos para la vista de jugadores del equipo */
+
+.team-header {
+    text-align: center;
+    margin: 20px 0;
+    padding: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 10px;
+}
+
+.team-logo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+.view-toggle {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.toggle-btn {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 0 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.toggle-btn:hover {
+    background: #0056b3;
+}
+
+.toggle-btn.active {
+    background: #28a745;
+}
+
+/* Estilos para vista de tabla */
+.table-view {
+    display: block;
+}
+
+.players-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.players-table th,
+.players-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.players-table th {
+    background: #f8f9fa;
+    font-weight: bold;
+}
+
+.players-table tr:hover {
+    background: #f5f5f5;
+}
+
+/* Estilos para vista de formación */
+.formation-view {
+    display: none;
+}
+
+.football-field {
+    background: linear-gradient(90deg, #2d5a27 0%, #4a7c59 50%, #2d5a27 100%);
+    border: 3px solid white;
+    border-radius: 10px;
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    height: 600px;
+    margin: 20px auto;
+    overflow: hidden;
+}
+
+.field-lines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.center-line {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 2px;
+    height: 100%;
+    background: white;
+}
+
+.center-circle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 120px;
+    height: 120px;
+    border: 2px solid white;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.penalty-area {
+    position: absolute;
+    width: 120px;
+    height: 200px;
+    border: 2px solid white;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.penalty-area.left {
+    left: 0;
+}
+
+.penalty-area.right {
+    right: 0;
+}
+
+.player-position {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background: #007bff;
+    border: 3px solid white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.player-position:hover {
+    transform: scale(1.1);
+    background: #0056b3;
+}
+
+.player-name {
+    position: absolute;
+    bottom: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.7);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 10px;
+    white-space: nowrap;
+}
+
+/* Posiciones predefinidas para formación 4-4-2 */
+.pos-gk { 
+    top: 10%; 
+    left: 50%; 
+    transform: translateX(-50%); 
+    background: #dc3545; 
+}
+
+.pos-def1 { 
+    top: 25%; 
+    left: 15%; 
+}
+
+.pos-def2 { 
+    top: 25%; 
+    left: 35%; 
+}
+
+.pos-def3 { 
+    top: 25%; 
+    left: 65%; 
+}
+
+.pos-def4 { 
+    top: 25%; 
+    left: 85%; 
+}
+
+.pos-mid1 { 
+    top: 50%; 
+    left: 15%; 
+}
+
+.pos-mid2 { 
+    top: 50%; 
+    left: 35%; 
+}
+
+.pos-mid3 { 
+    top: 50%; 
+    left: 65%; 
+}
+
+.pos-mid4 { 
+    top: 50%; 
+    left: 85%; 
+}
+
+.pos-for1 { 
+    top: 75%; 
+    left: 35%; 
+}
+
+.pos-for2 { 
+    top: 75%; 
+    left: 65%; 
+}
+
+.no-players {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+    font-style: italic;
+}
+
+.back-btn {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    display: inline-block;
+    margin: 20px 0;
+}
+
+.back-btn:hover {
+    background: #545b62;
+    color: white;
+    text-decoration: none;
+}
